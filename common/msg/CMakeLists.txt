@@ -117,6 +117,7 @@ set(msg_files
 	logger_status.msg
 	mag_worker_data.msg
 	magnetometer_bias_estimate.msg
+	main_ctrl_axes.msg
 	main_transitions.msg
 	manual_control_setpoint.msg
 	manual_control_switches.msg

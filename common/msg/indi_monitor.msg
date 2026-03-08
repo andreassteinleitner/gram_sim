@@ -7,7 +7,7 @@ float32[2] chi_dot_pd
 float32[3] track_dot_cmd
 float32[3] track_dot_m
 float32[3] track_dot_err
-float32[4] att_inc_cmd
+float32[3] att_inc_cmd
 float32[5] att_cmd
 float32[5] att_m
 float32[5] att_err

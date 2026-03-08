@@ -57,4 +57,11 @@ params.zeta_max = struct('default', 21, 'description', 'zeta_max', 'name', 'ZETA
 params.lidar_enabled = struct('default', 1, 'description', 'lidar_enabled', 'name', 'LIDAR_ENABLED', 'group','IFR_NAV');
 params.chiVel = struct('default', 2, 'description', 'chiVel', 'name', 'CHI_VEL', 'group','IFR_NAV');
 params.VaDisabled = struct('default', 0, 'description', 'Va (Airspeed-sensor) Disabled', 'name', 'VA_DISABLED', 'group','IFR_NAV');
+
+%% Signs
+params.rcsigns.ail = struct('default', 1, 'description', 'Sign of control command aileron', 'name', 'RC_AIL', 'group','IFR_NAV');
+params.rcsigns.ele = struct('default', 1, 'description', 'Sign of control command elevator', 'name', 'RC_ELE', 'group','IFR_NAV');
+params.rcsigns.rud = struct('default', 1, 'description', 'Sign of control command rudder', 'name', 'RC_RUD', 'group','IFR_NAV');
+params.rcsigns.thr = struct('default', 1, 'description', 'Sign of control command thrust', 'name', 'RC_THR', 'group','IFR_NAV');
+
 end

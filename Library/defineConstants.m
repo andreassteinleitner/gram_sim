@@ -10,7 +10,7 @@ const.temperatureGradient = struct('default', 0.0065, 'description', 'termperatu
 const.referenceTemperature= struct('default', 288.15, 'description', 'reference temperature for computing height from pressure');
 const.referencePressure   = struct('default', 1.01325e5, 'description', 'reference pressure for computing height from pressure');
 const.initialPositionLla  = struct('default', [position0(1); position0(2); ground_height], 'type', 'double', 'description', 'default initial position (LLA)');
-const.forcesSuppressedTime= struct('default', 1.9, 'type', 'double', 'description', 'Time after start without forces to initialise pixhawk estimation in equilibrium state');
+const.forcesSuppressedTime= struct('default', 0, 'type', 'double', 'description', 'Time after start without forces to initialise pixhawk estimation in equilibrium state');
 %forcesSuppressedTime < navConsts.minCalibrationTime!!
 const.startTakeOff        = struct('default', 7, 'type', 'double', 'description', 'Time at which take-off is initiated by RC emulator');
 const.startLanding        = struct('default', 40, 'type', 'double', 'description', 'Time at which landing is initiated by RC emulator');

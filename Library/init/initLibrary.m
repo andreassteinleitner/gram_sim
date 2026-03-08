@@ -18,7 +18,7 @@ end
 atmosphere = initAtmos();
 
 %% Aerodynamic
-aerodynamic = initAero(vehicle);
+aerodynamic = initAero_old(vehicle);
 
 %% Battery
 battery = initBattery(vehicle);
