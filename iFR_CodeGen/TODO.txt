@@ -1,0 +1,237 @@
+List of all open tasks for the IFR CodeGeneration V3 for PX4 Firmware v1.13.2
+
+Known Problems:
+
+	1) SIMULINK cannot create C-Code from model files (.slx) directly working in WSL directory (even when working on a network drive)
+		- Currently this is circumvented by building in folder on the local hard drive and moving the necessary files afterwards.
+	2) Code Generation crashes when uORB-Messages have sloppy code style. Specifically when there are no spaces around "=".
+		- Example:
+			Correct: 	uint8 TASK_ONE = 1
+			Will crash: uint8 TASK_ONE= 1
+	3) Code generation did not work properly when used during the development of the INDI controller with Philipp Julier
+		- a problem occurred while trying to subscribe to a certain topic (actuator_controls_0) which has multiples
+		- as this happened some time ago the exact details are not known anymore
+	4) Code Generation experienced some problems in 2022 with similar named simulink models.
+		- The problem occurred with formation_controller_2022 being present in the main simulink_controller folder and a formation_controller_2021 being present in Archives
+		- as this happened some time ago the exact details are not known anymore
+		- the problem was likely related to selecting the correct parameter busses, if remembered correctly
+	5) Code Generation experienced some problems in 2022 when multiple modules had been added to the PX4 Firmware
+		- building of PX4 Firmware failed because of similar function names
+		- this usually happened when different modules had identical constants (same name and same value) present
+		- source of error is Simulink Coder, which does not use really unique names for variables and functions
+		- used workaround: slightly change name and value of constants
+	6) After opening a model with openModel.m saving after changes have been made may take a very long time
+		- caused by working within WSL with certain systems
+		- can also be experienced when renaming files on wsl
+
+Open Test/Verification:
+
+	- Code Generation works with current Matlab Releases
+		- V2022b
+
+	- Code Generation works with multiple present models and modules
+	
+	- Code generation works when model only subscribes to one topic (or even zero?)
+
+	- Generation publishes with 100Hz (1/0.01s) when subscribed topics are published also with 100Hz
+
+	- duplicated model names within simulink_controllers and simulink_controllers/Archive do not result in a problem
+		- previously problems occurred for formation_controller_2020 and formation_controller_2021
+		- (see problem 4)
+
+Urgent:
+
+	- Do not create the ifr standard busses (e.g. ifr_baro)
+		- keep possibility to define and use user defined busses
+			- define in separate file
+			- keep old ifr busses as an example
+
+	add px4\fmu-v6c to standard boards
+
+	- Write Manual How to Use the IFR Code Generation
+		- Zeile TODO streichen für MBDA 
+		- MBDA erwähnen welcher der relevante Teil bei Installation, Sektion 1.7. nicht 1.6.
+		
+		
+		
+
+Tasks:
+
+	- Manual:
+		- update to include all changes to the beta version
+		- How to change origin of git Repo
+			- for IFR users own version of PX4_V3
+			- for adding a custom MAVLINK dialect
+		- get it rechecked by other IFR colleagues
+		- introduce picture captions?
+		- reference pictures by name or number like in LaTeX, if possible?
+		- talk about 100Hz sampletime
+
+	- Clean-Up
+		- within files
+			- find best solution to access or read folders and files within all functions and use it in all functions
+				- get path to current file: pwd()
+				- read file and split lines:
+		- similar Copyright Disclaimer in all files
+		- similar Name for the IFR Code Generation in all files
+			- matlab scripts
+			- also see templates
+			- also see skeletons
+
+	- More comments within code
+		- helps understand how the code works
+
+	- Intensify Usage of Functions:
+		- e.g. find module directory
+
+	generateCode_V3.m
+		- distinction between model_name and model_name_wrapper is performed only once
+		- move distinction to generateCode.m may be an even cleaner solution
+
+	- possibility to specify working folder for SIMULINK Code Generation (see Problem 1)
+		- can achieved with task to create central Preference text file (see below)
+
+	- possibility to specify folder for SIMULINK models (as of now: simulink_controllers) withing Firmware structure (or maybe outside)
+		- can achieved with task to create central Preference text file (see below)
+
+	- collect all specification text files (e.g. Prefix.txt and Standard_Boards.txt) in one Specifications.txt
+		- Annotate possible specifications
+		- also think of implications that this file has to be moved to created module folders and should include stacksize
+
+	- remove specification text files (e.g. Prefix.txt and Standard_Boards.txt) from git version control
+		- files should be kept as reference so they are created when the repo is cloned
+		- see Solution_Track_Files in MBDA_Pixhawk_Workshop
+			- only template in source control
+			- after cloning template must be converted and new file is in .gitignore
+			- must be specified in the manual or README file
+		- task should be performed after all specifications are collected in one file (see task above)
+
+	- solve implicit conversion errors
+		- try to find an example causing this error
+		- try using the casting modes setting within the code style tab
+
+	- more flexible naming conventions for models and modules
+		- createModule asks for main model in a certain folder within "simulink_controllers"
+		- module is still named like folder in "simulink_controllers", but models can be freely named
+			- NO need to specify as wrapper etc.
+			- multiple other models can be present, which may be sub-models of main model
+		- Info must be stored within created module folder (like stacksize and other options)
+		- also ask, if standard prefix should be used, or if it should be altered
+			- prefix info must be stored within module folder
+			- Question: but how can then own modules be identified by other functions (e.g. activateModule.m)
+				- List of Prefixes must be changed dynamically with varying size, so other scripts/function can access them
+		- ! also adjust templates
+
+	- Decide if addPX4BusCreator.m should be pushed to helper_functions
+
+	- generateModule.m
+		- Option to delete Folder on C: with generated model files --> clean build
+		- Check if the script internally checks if the related simulink models of a module is existing, before the user can select a module	
+			- if not a Warning Message should be shown and the module should not be selectable by the user
+
+	- activateModule.m
+		- include option to show all possible boards
+			- right now only the "default" boards are shown.
+		- allow to add to multiple boards
+			- ask again after updating one board
+
+	- deactivateModule.m and deleteModule.m
+		- simplify using shared functions (e.g. remove a specific module from a specific board)
+
+	- unify user input experience:
+		- Similar questions in all files
+		- Choice yes/no is answered no, if "Enter" is pressed
+		- Similar input is required to use list of standard boards
+		- Identical choices (like using list of standard boards) show identical numbers for selecting
+		- maybe this can be achieved by using dedicated functions
+
+	- recheck all outputs of matlab functions
+		- remove irrelevant outputs
+		- add outputs which make sense
+		- unify user experience
+
+	- check why compiling of firmware always starts completely over again, after a module has been modified
+		- does ist also occur, when directly altering the C-Code of a module?
+		- may be newly writing of CMakeLists.txt by the IFR code generation be the underlying issue?
+
+	- Optimize Preferences of Simulink Code Generation
+		- set in generateCode.m ?
+		- be very picky to catch implicit data type conversions
+		- how can it also be triggered with openModel.m
+
+	- clock issue
+		- implement additional clock using microseconds, which allows access to internal clock (see getHiResTime() in self written modules)
+			--> could be used to fill timestamp field in published topics (see timestamp issue below)
+		- reevaluate if clock in seconds from "mLaunchTime" (current clock version) is really required to kept as a standard feature
+			- relevant use case: IFR Navigation, which starts after Arming
+		- also address the "no idea why the 0.001 offset is necessary" issue
+		- ! also adjust templates
+
+	- timestamp issue:
+		- currently the local_timestamp can accessed within simulink models for specific topics (e.g. vehicle_local_position)
+			- this was necessary to calculate a global reference time for inter agent usage
+		- check if local timestamp should be accessible for all modules
+		- on early versions of PX4 the timestamp filed was not included in the message definition, maybe the behavior of the IFR Code Generation dates back from these days
+		- advantage of current implementation: no necessity to fill timestamp field for outgoing busses resp. topics
+			- could be neglected if internal clock in microseconds would be present (see clock issue above)
+
+	- actuator_controls_0 problem (see also problem 3):
+		- occurred when working with INDI-controller, which required to subscribe to actuator_controls_0
+		- exact issue is not known anymore
+		- there is hotfix implemented in the IFR code generation but it is unknown if the fix worked and which side effects are coming with it
+			- hot fix presumably only fixes the actuator_controls issue but other topics also have multiples
+
+	- make stepsize adjustable
+		- define in defineConstants.m as it was intended by original authors?
+		- ! also adjust templates
+
+
+
+Later:
+
+	- make "clean" version for 12.3
+		- !should be done before attempting "work queue" and "yaml" tasks (see below)
+		- just replacing the function to add module to build should work
+		- maybe also the auto-start function has changed
+
+	- solve Problem 1)
+		- Problem does not occur for Tuttas?
+			- maybe related to Matlab Version?
+		- Install matlab within WSL when possible in the future (currently this is not supported)
+			- may require Win 11
+
+	- solve Problem 2)
+		- make code generation more robust
+
+	- check possibility to use uint64 for SIMULINK Code Generation
+		- there have been limitations with SIMULINK in the past, so the IFR Code Generation converts uint64 to double
+
+	- parameter can also specified as uint32
+		- e.g. offers possibility to specify global coordinates
+		- ! also adjust templates
+
+	- usage of constants is implemented correctly
+		- currently the file defineConstants.m exists but the IFR code generation cannot work with it
+		- also update files in template folder
+
+	- discover possibilities in CMakeLists.txt file
+		- change priorities etc
+		- tackle task with work queue implementation (see below)
+
+	- check if brach v1.12.3 should be removed completely?
+		- content could be transferred into a separate dedicated repo
+		- opens the question, if different PX4 firmware versions should be supported with one version of the IRF Code Generation
+			- could be set within preferences file
+			- different templates 
+
+	- Possibility to add module to work queue
+		- newer method used in PX4 firmware which uses dynamic memory allocation
+		- Friedrich Tuttas experienced some problems using work queue with own written module?
+
+	- use .yaml files to specify parameters
+		- newer method used in PX4 firmware
+		- see https://docs.px4.io/main/en/advanced/parameters_and_configurations.html
+		- ! also adjust templates
+
+	- possibility to adjust publishing and subscription interval for individual topics
+		- ! also adjust templates

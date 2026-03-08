@@ -1,0 +1,11 @@
+px4_add_module(
+	MODULE modules__%%module_name_sc%%
+	MAIN %%module_name_sc%%
+	STACK_MAIN 2500
+	STACK_MAX 4000
+	SRCS
+		# code generated source files
+		%%module_name_sc%%_main.cpp
+		%%module_name_sc%%.cpp
+	DEPENDS
+	)

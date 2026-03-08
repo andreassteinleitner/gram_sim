@@ -1,0 +1,60 @@
+Type 7 (Stability analysis)
+3D-Panels/VLM2
+
+VInf  = 21.094 m/s
+Alpha =  -0.18°
+Mass  =   0.000 kg
+Control value =  1.00
+
+XNP =   0.107 m
+XCP =   0.072 m
+YCP =  -0.000 m
+ZCP =   0.016 m
+
+CL  =   0.21344
+CD  =   0.00219
+VCD =   0.00000
+ICD =   0.00219
+CX  =  -0.00086
+CY  =   0.00000
+Cl  =   0.00000
+Cm  =   0.00000
+ICm =   0.00000
+VCm =   0.00000
+Cn  =   0.00000
+ICn =   0.00000
+VCn =   0.00000
+
+
+Non-dimensional Stability Derivatives:
+CXu  =  -0.00439
+CLu  =   0.00010
+Cmu  =  -0.00000
+
+CXa  =   0.15156
+CLa  =   5.21125
+Cma  =  -0.75651
+
+CXq  =   0.07643
+CLq  =   7.55259
+Cmq  =  -7.63006
+
+CYb  =  -0.29542
+Clb  =  -0.05541
+Cnb  =   0.04826
+
+CYp  =  -0.09111
+Clp  =  -0.50260
+Cnp  =  -0.03206
+
+CYr  =   0.13163
+Clr  =   0.06892
+Cnr  =  -0.02568
+
+Non-dimensional Control Derivatives:
+CXd  =   0.00742
+CYd  =   0.00000
+CZd  =  -0.49414
+Cld  =   0.00000
+Cmd  =  -1.06832
+Cnd  =  -0.00000

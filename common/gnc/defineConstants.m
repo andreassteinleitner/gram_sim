@@ -1,0 +1,17 @@
+function varargout =defineConstants(varargin)
+    % Determine the number of outputs expected
+    nOut = max(nargout, 1); % Ensure at least one output is handled
+
+    % Preallocate varargout
+    varargout = cell(1, nOut);
+    
+    result = defineConstants_gnc(varargin{:});
+
+    % Set the outputs
+    varargout{1} = result;
+        
+    % If more outputs are requested, set them
+    for k = 2:nargout
+        varargout{k} = result * k;
+    end
+end

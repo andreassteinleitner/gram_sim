@@ -1,0 +1,23 @@
+uint64 timestamp            # time since system start (microseconds)
+float32[5] modes
+float32    ias
+float32    roll_lim
+float32[6] act_direct
+float32[3] rate_cmd
+float32[5] att_cmd
+float32[3] track_cmd
+float32[3] rate_m
+float32[5] att_m
+float32[3] trk_m
+float32[4] chi_ail
+float32[4] mu_ail
+float32[20] gamma_ele
+float32[4] theta_ele
+float32[4] beta_rud
+float32[4] psi_rud
+float32[4] va_thr
+float32[4] gamma_thr
+float32[6] act_cmd
+float32[4] act_rates
+float32[4] act_m
+float32[7] flare_moni

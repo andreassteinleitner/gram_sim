@@ -1,0 +1,8 @@
+*lprj/
+*.slxc
+*.slx
+defineConstants.m
+defineParameters.m
+cache/
+code/
+*rtw/

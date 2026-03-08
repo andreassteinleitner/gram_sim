@@ -1,0 +1,13 @@
+uint64 timestamp		# time since system start (microseconds)
+float32 gamma_dot_acc
+float32 gamma_dot_der_008
+float32 gamma_dot_der_004
+float32 gamma_dot_der_002
+float32 gamma_dot_der_001
+float32 gamma_dot_der_0005
+float32 chi_dot_acc
+float32 chi_dot_der_008
+float32 chi_dot_der_004
+float32 chi_dot_der_002
+float32 chi_dot_der_001
+float32 chi_dot_der_0005

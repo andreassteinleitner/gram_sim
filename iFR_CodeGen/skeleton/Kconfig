@@ -1,0 +1,5 @@
+menuconfig MODULES_%%module_name_usc%%
+	bool "%%module_name_sc%%"
+	default n
+	---help---
+		Enable support for %%module_name_sc%%
