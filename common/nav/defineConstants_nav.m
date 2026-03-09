@@ -1,20 +1,18 @@
 function [const]=defineConstants_nav(varargin)
 % const.example_vector=struct('default', [48.7501*pi/180; 9.1053*pi/180; 508.917], 'type', 'double', 'description', 'default initial position (LLA)');
 if nargin < 1
-    sampletime = 0.01;
     position0 = [48.6340;9.4321;353.3382];
     vehicle_height = 0.3382;
     ground_height = position0(3)-vehicle_height;
     air_start = 0;
 else
     vehicle = varargin{1};
-    sampletime = vehicle.sampletime;
     position0 = vehicle.pos0;
     ground_height = vehicle.ground_height;
     air_start = ~vehicle.landed;
 end
 
-const.stepSize           = struct('default', sampletime, 'unit', 's', 'description', 'sampling interval'); % default value, will be overwritten by solver step-size given in Model Configuration Parameters
+const.stepSize           = struct('default', 0.01, 'unit', 's', 'description', 'sampling interval'); % default value, will be overwritten by solver step-size given in Model Configuration Parameters
 
 const.atmosphereKappa    =struct('default', 1.235, 'description', 'heat capacity ratio for computing height from pressure');
 const.temperatureGradient=struct('default', 0.0065, 'description', 'termperature gradient for computing height from pressure');

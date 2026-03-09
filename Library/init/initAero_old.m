@@ -1,33 +1,28 @@
 function aerodynamic = initAero_old(vehicle)
 toExcel = 0;
 
+if vehicle.type == 1
+    name = 'funcubXL_gram80'; %4kg
+    gram_factor=5;
+    CDmod = 0.3;
+    % name = 'egenius_gram80'; %40kg
+    % gram_factor=1;
+    % CDmod = 1;
 
-if vehicle.type == 1 % TASL
-    name = 'tasl';
-    aerodynamic.chord = 0.306;
-    aerodynamic.S = 1.415;
-    aerodynamic.b = 4.658;
-    Cm0 = -0.009;
-    CnrDelta = 4;
-    C_rud_mod = 1;
-    alphaMax = 15;
-    CLdeg    = 0.5;
-    CDmod = 1.3;
+    aerodynamic.chord = 0.435;
+    aerodynamic.S = 0.816;
+    aerodynamic.b = 1.8;
     
-elseif vehicle.type == 2 % MAJA
-    name = 'maja';
-    aerodynamic.chord = 0.245;
-    aerodynamic.S = 0.468;
-    aerodynamic.b = 2.41;
     Cm0 = 0.025;
     CnrDelta = 4;
     C_rud_mod = 1;
-    alphaMax = 15;
+    alphaMax = 10;
     CLdeg    = 0.5;
-    CDmod = 1;
 
-elseif vehicle.type == 3 % FUNCUB XL
-    name = 'funcubXL_flaps';
+elseif vehicle.type == 2 % FUNCUB XL
+    name = 'funcubXL_old';
+    gram_factor=1;
+
     aerodynamic.chord = 0.26; %MAC=0.235
     aerodynamic.S = 0.4165; %assuming trapezoidal
     aerodynamic.b = 1.7;
@@ -36,18 +31,6 @@ elseif vehicle.type == 3 % FUNCUB XL
     CnrDelta = 4;
     C_rud_mod = 1;
     alphaMax = 10;
-    CLdeg    = 0.5;
-    CDmod = 1;
-    
-elseif vehicle.type == 4 % FUNCUB NG
-    name ='funcubNG';
-    aerodynamic.chord = 0.231;
-    aerodynamic.S = 0.33;
-    aerodynamic.b = 1.42;
-    Cm0 = 0.025;
-    CnrDelta = 4;
-    C_rud_mod = 1;
-    alphaMax = 15;
     CLdeg    = 0.5;
     CDmod = 1;
 end
@@ -96,7 +79,7 @@ derivativIdentifierMap={'CYrud','Clrud','Cnrud'};
 %data = fileread(['TrimCalc/0deg_Rudder.txt']);
 out = cell2mat(cellfun(fun,{'0','udder'},'Uni',0));
 indexRud = find(all(out,2));
-if(length(indexRud)==1)
+if isscalar(indexRud)
     data = fileread(['TrimCalc/', name, '/', fileList{indexRud}]);
     for jj = 1:length(derivativIdentifier)
         res  = regexp(data,[derivativIdentifier{jj} '\s*=\s*(?<value>-?\d*.\d*)'],'names');
@@ -109,7 +92,7 @@ derivativIdentifier={'CYd','Cld','Cnd'};
 %data = fileread(['TrimCalc/0deg_Aileron.txt']);
 out = cell2mat(cellfun(fun,{'0','ileron'},'Uni',0));
 indexAil = find(all(out,2));
-if(length(indexAil)==1)
+if isscalar(indexAil)
     derivativIdentifierMap={'CYail','Clail','Cnail'};
     data = fileread(['TrimCalc/', name, '/', fileList{indexAil}]);
     for jj = 1:length(derivativIdentifier)
@@ -168,20 +151,12 @@ end
 betaVec = [];
 vVec = [];
 alphaVec = [];
-HVec = [];
 
 for ii = 1:length(folder_list)
     
     file     = folder_list{ii};
     data     = fileread(['Polars/', name, '/', file]);
     withBody = contains(data,'with Body');
-    
-    if contains(file,'gr_')
-        H = file(length(file)-6:length(file)-4);
-        inGE = 1;
-    else
-        inGE = 0;
-    end
     
     %file    = folder_list{ii};
     %data    = fileread([mainFolderPolar, file]);
@@ -200,31 +175,18 @@ for ii = 1:length(folder_list)
     alpha   = res(:,1);
     alphaVec = [alphaVec,alpha'];
     
-    if inGE
-        if withBody
-            poldataBodyGE.(['H' num2str(H)]).(['V' num2str(round(V))]).(['Beta' num2str(round(beta))]) = res;
-        else
-            poldataGE.(['H' num2str(H)]).(['V' num2str(round(V))]).(['Beta' num2str(round(beta))]) = res;
-        end
-        H=string(H(1))+"."+string(H(3));
-        H=str2double(H);
-        HVec=[HVec,H];
-    else
-        if withBody
+    if withBody
             poldataBody.(['V' num2str(round(V))]).(['Beta' num2str(round(beta))]) = res;
-        else
+    else
             poldata.(['V' num2str(round(V))]).(['Beta' num2str(round(beta))]) = res;
-        end
     end
+    
 end
 
 alphaVec = -8:2:24;
 betaVec  = sort(unique(betaVec));
 vVec     = sort(unique(vVec));
-HVec     = sort(unique(HVec));
-HVecs=["0_5","1_0","1_5","2_5","7_5","100"];
 dummy = zeros(length(alphaVec),length(betaVec),length(vVec));
-dummyGE = zeros(length(alphaVec),length(betaVec),length(vVec),length(HVec));
 aerodynamic.polar.alpha = dummy;
 aerodynamic.polar.beta  = dummy;
 aerodynamic.polar.V     = dummy;
@@ -234,83 +196,6 @@ aerodynamic.polar.CY    = dummy;
 aerodynamic.polar.Cl    = dummy;
 aerodynamic.polar.Cm    = dummy;
 aerodynamic.polar.Cn    = dummy;
-aerodynamic.polarGE.alpha = dummyGE;
-aerodynamic.polarGE.beta  = dummyGE;
-aerodynamic.polarGE.V     = dummyGE;
-aerodynamic.polarGE.CL    = dummyGE;
-aerodynamic.polarGE.CD    = dummyGE;
-aerodynamic.polarGE.CY    = dummyGE;
-aerodynamic.polarGE.Cl    = dummyGE;
-aerodynamic.polarGE.Cm    = dummyGE;
-aerodynamic.polarGE.Cn    = dummyGE;
-
-for tt = 1:length(HVec)
-    H = HVecs(tt);
-    for jj = 1:length(betaVec)
-        beta = betaVec(jj);
-        for kk = 1:length(vVec)
-            V = vVec(kk);
-            if exist('poldataBodyGE','var')
-                dataBodyGE = poldataBodyGE.(['H' num2str(H)]).(['V' num2str(round(V))]).(['Beta' num2str(round(beta))]);
-                breakerBody = 0;
-            else
-                dataBodyGE = 0;
-                breakerBody = 1;
-            end
-            if exist('poldataGE','var')
-                dataGE = poldataGE.(['H' num2str(H)]).(['V' num2str(round(V))]).(['Beta' num2str(round(beta))]);
-                breaker = 0;
-            else
-                dataBodyGE = 0;
-                breaker = 1;
-            end
-            for ii = 1:length(alphaVec)
-                alpha = alphaVec(ii);
-                if sum(dataBodyGE(:,1)==alpha)==0 && ~breakerBody
-                    dataBodyGE = [dataBodyGE;alpha,interp1(dataBodyGE(:,1),dataBodyGE(:,2:end),alpha,'linear','extrap')];
-                end
-                if sum(dataGE(:,1)==alpha)==0 && ~breaker
-                    dataGE = [dataGE;alpha,interp1(dataGE(:,1),dataGE(:,2:end),alpha,'linear','extrap')];
-                end
-                indBody = dataBodyGE(:,1)==alpha;
-                ind = dataGE(:,1)==alpha;
-                
-                if alpha > alphaMax
-                    CLmod = 1-CLdeg*(alpha-alphaMax)/(max(alphaVec)-alphaMax);
-                else
-                    CLmod = 1;
-                end
-                
-                if breakerBody
-                    aerodynamic.polarGE.CL(ii,jj,kk,tt)    = dataGE(ind,3)*CLmod;
-                    aerodynamic.polarGE.CD(ii,jj,kk,tt)    = dataGE(ind,6)*CDmod;
-                    aerodynamic.polarGE.CY(ii,jj,kk,tt)    = dataGE(ind,7);
-                    aerodynamic.polarGE.Cl(ii,jj,kk,tt)    = dataGE(ind,8);
-                    aerodynamic.polarGE.Cm(ii,jj,kk,tt)    = dataGE(ind,9)+Cm0;
-                    aerodynamic.polarGE.Cn(ii,jj,kk,tt)    = dataGE(ind,10);
-                elseif breaker
-                    aerodynamic.polarGE.CL(ii,jj,kk,tt)    = dataBodyGE(indBody,3)*CLmod;
-                    aerodynamic.polarGE.CD(ii,jj,kk,tt)    = dataBodyGE(indBody,6)*CDmod;
-                    aerodynamic.polarGE.CY(ii,jj,kk,tt)    = dataBodyGE(indBody,7);
-                    aerodynamic.polarGE.Cl(ii,jj,kk,tt)    = dataBodyGE(indBody,8);
-                    aerodynamic.polarGE.Cm(ii,jj,kk,tt)    = dataBodyGE(indBody,9)+Cm0;
-                    aerodynamic.polarGE.Cn(ii,jj,kk,tt)    = dataBodyGE(indBody,10);
-                else
-                    aerodynamic.polarGE.CL(ii,jj,kk,tt)    = dataBodyGE(indBody,3)*CLmod;
-                    aerodynamic.polarGE.CD(ii,jj,kk,tt)    = dataGE(ind,6)*CDmod;
-                    aerodynamic.polarGE.CY(ii,jj,kk,tt)    = dataBodyGE(indBody,7);
-                    aerodynamic.polarGE.Cl(ii,jj,kk,tt)    = dataBodyGE(indBody,8);
-                    aerodynamic.polarGE.Cm(ii,jj,kk,tt)    = dataBodyGE(indBody,9)+Cm0;
-                    aerodynamic.polarGE.Cn(ii,jj,kk,tt)    = dataBodyGE(indBody,10);
-                end
-            end
-        end
-    end
-end
-aerodynamic.polarGE.alphaBounds = pi/180*[min(alphaVec),max(alphaVec)];
-aerodynamic.polarGE.betaBounds = pi/180*[min(betaVec),max(betaVec)];
-aerodynamic.polarGE.vBounds = [min(vVec),max(vVec)];
-[aerodynamic.polarGE.alpha,aerodynamic.polarGE.beta,aerodynamic.polarGE.V,aerodynamic.polarGE.H] = ndgrid(pi/180*alphaVec,pi/180*betaVec,vVec,HVec);
 
 for jj = 1:length(betaVec)
     beta = betaVec(jj);
@@ -347,12 +232,12 @@ for jj = 1:length(betaVec)
                 CLmod = 1;
             end
             if breakerBody
-                aerodynamic.polar.CL(ii,jj,kk)    = data(ind,3)*CLmod;
-                aerodynamic.polar.CD(ii,jj,kk)    = data(ind,6)*CDmod;
-                aerodynamic.polar.CY(ii,jj,kk)    = data(ind,7);
-                aerodynamic.polar.Cl(ii,jj,kk)    = data(ind,8);
-                aerodynamic.polar.Cm(ii,jj,kk)    = data(ind,9)+Cm0;
-                aerodynamic.polar.Cn(ii,jj,kk)    = data(ind,10);
+                aerodynamic.polar.CL(ii,jj,kk)    = gram_factor * data(ind,3)*CLmod;
+                aerodynamic.polar.CD(ii,jj,kk)    = gram_factor * data(ind,6)*CDmod;
+                aerodynamic.polar.CY(ii,jj,kk)    = gram_factor * data(ind,7);
+                aerodynamic.polar.Cl(ii,jj,kk)    = gram_factor * data(ind,8);
+                aerodynamic.polar.Cm(ii,jj,kk)    = gram_factor * (data(ind,9)+Cm0);
+                aerodynamic.polar.Cn(ii,jj,kk)    = gram_factor * data(ind,10);
             elseif breaker
                 aerodynamic.polar.CL(ii,jj,kk)    = dataBody(indBody,3)*CLmod;
                 aerodynamic.polar.CD(ii,jj,kk)    = dataBody(indBody,6)*CDmod;

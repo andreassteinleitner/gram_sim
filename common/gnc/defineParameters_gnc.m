@@ -52,9 +52,9 @@ params.guidance.psi_cmd     = struct('default', 0, 'description', 'set-point psi
 
 %% Controller gains
 TSP = 3; %time separation principle
-k_p     = 16;
-k_q     = 16;
-k_r     = 16;
+k_p     = 12;
+k_q     = 12;
+k_r     = 8;
 k_a     = k_q/TSP;%alpha
 k_t     = k_q/TSP;%theta
 k_b     = k_r/TSP;%beta
@@ -88,13 +88,33 @@ params.indi.K_RTE_Q     = struct('default', k_q, 'description', 'Indi rate q gai
 params.indi.K_RTE_R     = struct('default', k_r, 'description', 'Indi rate r gain', 'name', 'I_K_RATE_R', 'group','IFR_GNC');
 params.indi.K_RTE_PSI_DD= struct('default', 1.2, 'description', 'NDI brkae controller P-gain', 'name', 'I_K_TW_KP', 'group','IFR_GNC');
 
-%funcub
+params.indi.psi_enabled= struct('default', 1, 'description', 'Disable psi measurement on ground', 'name', 'I_PSI_ACTIVE', 'group','IFR_GNC');
+params.indi.oswald      = struct('default', 0.7, 'description', 'Oswald factor B matrix', 'name', 'I_OSWALD_B', 'group','IFR_GNC');
+params.indi.cl0         = struct('default', 0.6, 'description', 'Zero lift coefficient', 'name', 'I_CL0', 'group','IFR_GNC');
+
+%% Effectiveness
 params.indi.EFF_XI_L   = struct('default', -0.1759, 'description', 'Indi effectivity aileron to roll', 'name', 'I_EFF_XI_L', 'group','IFR_GNC');
 params.indi.EFF_XI_N   = struct('default', 0.0051, 'description', 'Indi effectivity aileron to yaw', 'name', 'I_EFF_XI_N', 'group','IFR_GNC');
+params.indi.EFF_ETA_M  = struct('default', -1.8705, 'description', 'Indi effectivity elevator to pitch', 'name', 'I_EFF_ETA_M', 'group','IFR_GNC');
 params.indi.EFF_ZETA_L = struct('default', 0.0078, 'description', 'Indi effectivity rudder to roll', 'name', 'I_EFF_ZETA_L', 'group','IFR_GNC');
 params.indi.EFF_ZETA_N = struct('default', -0.0938, 'description', 'Indi effectivity rudder to yaw', 'name', 'I_EFF_ZETA_N', 'group','IFR_GNC');
-params.indi.EFF_ETA_M  = struct('default', -1.8705, 'description', 'Indi effectivity elevator to pitch', 'name', 'I_EFF_ETA_M', 'group','IFR_GNC');
-params.indi.EFF_DELTA  = struct('default', 14, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
+params.indi.EFF_DELTA  = struct('default', 150, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
+% params.indi.EFF_DELTA  = struct('default', 14, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
+
+%% Inertia
+params.indi.inertia_xx = struct('default', 1.4707, 'description', 'Inertia xx', 'name', 'I_INERT_XX', 'group','IFR_GNC');
+params.indi.inertia_xy = struct('default', 0, 'description', 'Inertia xy', 'name', 'I_INERT_XY', 'group','IFR_GNC');
+params.indi.inertia_yy = struct('default', 26.924, 'description', 'Inertia yy', 'name', 'I_INERT_YY', 'group','IFR_GNC');
+params.indi.inertia_yz = struct('default', 0, 'description', 'Inertia yz', 'name', 'I_INERT_YZ', 'group','IFR_GNC');
+params.indi.inertia_zz = struct('default', 27.748, 'description', 'Inertia zz', 'name', 'I_INERT_ZZ', 'group','IFR_GNC');
+params.indi.inertia_xz = struct('default', 0.545, 'description', 'Inertia xz', 'name', 'I_INERT_XZ', 'group','IFR_GNC');
+
+% params.indi.inertia_xx = struct('default', 0.1414, 'description', 'Inertia xx', 'name', 'I_INERT_XX', 'group','IFR_GNC');
+% params.indi.inertia_xy = struct('default', 0, 'description', 'Inertia xy', 'name', 'I_INERT_XY', 'group','IFR_GNC');
+% params.indi.inertia_yy = struct('default', 0.1124, 'description', 'Inertia yy', 'name', 'I_INERT_YY', 'group','IFR_GNC');
+% params.indi.inertia_yz = struct('default', 0, 'description', 'Inertia yz', 'name', 'I_INERT_YZ', 'group','IFR_GNC');
+% params.indi.inertia_zz = struct('default', 0.2333, 'description', 'Inertia zz', 'name', 'I_INERT_ZZ', 'group','IFR_GNC');
+% params.indi.inertia_xz = struct('default', 0.0104, 'description', 'Inertia xz', 'name', 'I_INERT_XZ', 'group','IFR_GNC');
 
 %% Modal
 params.lonCruise.K_ALPHA_ETA=struct('default', 0, 'description', 'short period alpha', 'unit', 'Gs', 'name', 'CR_K_A_ETA', 'group','IFR_GNC');
@@ -124,18 +144,6 @@ params.latCruise.I_BETA_ZETA=struct('default', 0, 'description', 'integrator for
 params.latCruise.I_PHI_ZETA=struct('default', 0, 'description', 'integrator for roll deviation', 'unit', 'Gs', 'name', 'CR_I_PHI_ZTA', 'group','IFR_GNC');
 params.latCruise.P_CHI=struct('default', 0.05, 'description', 'gain for path azimuth deviation', 'unit', 'Gs', 'name', 'CR_K_PCHI', 'group','IFR_GNC');
 params.lonCruise.mainGain=struct('default', 100, 'description', 'Overall controller gain', 'unit', 'Gs', 'name', 'CR_MAINGAIN', 'group','IFR_GNC');
-
-%% Inertia
-params.indi.inertia_xx = struct('default', 0.1414, 'description', 'Inertia xx', 'name', 'I_INERT_XX', 'group','IFR_GNC');
-params.indi.inertia_xy = struct('default', 0, 'description', 'Inertia xy', 'name', 'I_INERT_XY', 'group','IFR_GNC');
-params.indi.inertia_yy = struct('default', 0.1124, 'description', 'Inertia yy', 'name', 'I_INERT_YY', 'group','IFR_GNC');
-params.indi.inertia_yz = struct('default', 0, 'description', 'Inertia yz', 'name', 'I_INERT_YZ', 'group','IFR_GNC');
-params.indi.inertia_zz = struct('default', 0.2333, 'description', 'Inertia zz', 'name', 'I_INERT_ZZ', 'group','IFR_GNC');
-params.indi.inertia_xz = struct('default', 0.0104, 'description', 'Inertia xz', 'name', 'I_INERT_XZ', 'group','IFR_GNC');
-
-params.indi.psi_enabled= struct('default', 1, 'description', 'Disable psi measurement on ground', 'name', 'I_PSI_ACTIVE', 'group','IFR_GNC');
-params.indi.oswald      = struct('default', 0.7, 'description', 'Oswald factor B matrix', 'name', 'I_OSWALD_B', 'group','IFR_GNC');
-params.indi.cl0         = struct('default', 0.6, 'description', 'Zero lift coefficient', 'name', 'I_CL0', 'group','IFR_GNC');
 
 %% Signs
 params.controlsigns.ail = struct('default', 1, 'description', 'Sign of control command aileron', 'name', 'SIGN_AIL', 'group','IFR_GNC');

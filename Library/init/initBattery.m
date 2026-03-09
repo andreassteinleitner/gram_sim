@@ -1,18 +1,6 @@
-function battery = initBattery(vehicle)
+function battery = initBattery
 
-switch vehicle.type
-    case 1 % TASL
-        s = 10;
-        Ah = 15;
-        battery.Vfull = s*4.2;
-        battery.Vnom  = s*3.7;
-        battery.Vempt = s*3.25;
-        battery.Qfull = Ah*3600;
-        battery.Qnom  = 0.95 * battery.Qfull;
-        battery.Qempt = 0.2  * battery.Qnom;
-        battery.B     = 3/battery.Qempt;
-    case {2,3,4}% Maja, Funcub XL, Funcub NG    
-        battery.Vfull = 16.8;
+battery.Vfull = 16.8;
         battery.Vnom  = 14.8;
         battery.Vempt = 13.0;
         battery.Qfull = 13.2*3600;
@@ -20,7 +8,6 @@ switch vehicle.type
         battery.Qempt = battery.Qnom*0.2;
         battery.B     = 3/battery.Qempt;
         s=3.3;
-end
 
 syms K A
 V0 = battery.Vfull-A;

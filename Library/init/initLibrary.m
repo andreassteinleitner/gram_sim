@@ -21,14 +21,14 @@ atmosphere = initAtmos();
 aerodynamic = initAero_old(vehicle);
 
 %% Battery
-battery = initBattery(vehicle);
+battery = initBattery();
 
 %% Engine
-engine = initEngine(vehicle); %electric propulsion
-propulsion = initPropulsion(); %combustion engine
+engine = initEngine(); %electric propulsion
+propulsion = initPropulsion(vehicle); %combustion engine
 
 %% Propeller
-propeller = initPropeller(vehicle);
+propeller = initPropeller();
 
 %% Servos
 servo = initServos();
