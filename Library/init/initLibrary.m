@@ -18,17 +18,10 @@ end
 atmosphere = initAtmos();
 
 %% Aerodynamic
-aerodynamic = initAero_old(vehicle);
-
-%% Battery
-battery = initBattery(vehicle);
+aerodynamic = initAero(vehicle);
 
 %% Engine
-engine = initEngine(vehicle); %electric propulsion
 propulsion = initPropulsion(); %combustion engine
-
-%% Propeller
-propeller = initPropeller(vehicle);
 
 %% Servos
 servo = initServos();

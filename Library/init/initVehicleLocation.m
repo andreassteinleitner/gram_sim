@@ -53,14 +53,14 @@ location_name = location_TO.name;
 %% init vehicle
 vehicle = vehicleStruct{vehicleType};
 
-initialPitch = tan((vehicle.gear.right_pos(3)-vehicle.gear.aux_pos(3))/(vehicle.gear.right_pos(1)-vehicle.gear.aux_pos(1))); %deg
-HaG = angle2rotation(0, initialPitch, 0)*(vehicle.gear.right_pos);
-HaG = HaG(3)+0.2;
+initialPitch = 0;%tan((vehicle.gear.right_pos(3)-vehicle.gear.aux_pos(3))/(vehicle.gear.right_pos(1)-vehicle.gear.aux_pos(1))); %deg
+HaG = 0.2;%[0,0,1]*(angle2rotation(0, initialPitch, 0)*(vehicle.gear.right_pos));
+HaG = HaG+0.2;
 if exist('AIR_START_FLAG','var') && AIR_START_FLAG == 1  %Air start
     % vehicle.ctrlStartTime = 2;
     vehicle.landed = 0;
-    vehicle.pos0 = location_TO.groundPos + [0 0 500];
-    vehicle.vel0 = [20 0 0];
+    vehicle.pos0 = location_TO.groundPos + [0 0 100];
+    vehicle.vel0 = [50 0 0];
     vehicle.ori0 = [0,0,0]*pi/180;
     vehicle.omega0 = [0;0;0];
 else %Ground start
@@ -209,31 +209,30 @@ locationStruct{9}.airport       = 4;
 end
 
 function vehicleStruct = vehicleOptions()
-% Maja
-vehicleStruct{1}.type = 2;
-vehicleStruct{1}.name = 'MAJA';
 
-vehicleStruct{1}.m = 4.2;
-vehicleStruct{1}.J = [0.2139 0 -0.0015; 0 0.2251 0; -0.0015 0 0.4362];
-vehicleStruct{1}.cg = [ -0.2; 0;  0];
-vehicleStruct{1}.S = 0.468;
-vehicleStruct{1}.b = 2.41;
-vehicleStruct{1}.chord = 0.245;
+vehicleStruct{1}.type = 1;
+vehicleStruct{1}.name = 'Gram80';
+vehicleStruct{1}.m = 34.3;
+vehicleStruct{1}.J = [1.4707 0 0.545; 0 26.924 0;0.545 0 27.748];
+vehicleStruct{1}.cg = [1.545 ; 0; 0.094];
+vehicleStruct{1}.S = 0.816;
+vehicleStruct{1}.b = 1.8;
+vehicleStruct{1}.chord = 0.435;
 vehicleStruct{1}.fuselage = 10; %Lateral fuselage cross section
 
-refLengthScaled = 0.2;
-
-vehicleStruct{1}.gear.right_pos  = vehicleStruct{1}.cg + [0.05; 0.15; refLengthScaled];
-vehicleStruct{1}.gear.left_pos   = vehicleStruct{1}.cg + [0.05; -0.15; refLengthScaled];
-vehicleStruct{1}.gear.aux_pos   = vehicleStruct{1}.cg + [-0.5; 0; 0.5*refLengthScaled];
-
-vehicleStruct{1}.gear.main_stiff = 0.4*vehicleStruct{1}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
-vehicleStruct{1}.gear.aux_stiff = 0.2*vehicleStruct{1}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
-vehicleStruct{1}.gear.main_damp  = 5*vehicleStruct{1}.m;                 % N/(m/s)
-vehicleStruct{1}.gear.aux_damp  = 2*vehicleStruct{1}.m;                 % N/(m/s)
+% refLengthScaled = 0.2;
+% 
+% vehicleStruct{1}.gear.right_pos  = vehicleStruct{1}.cg + [0.05; 0.15; refLengthScaled];
+% vehicleStruct{1}.gear.left_pos   = vehicleStruct{1}.cg + [0.05; -0.15; refLengthScaled];
+% vehicleStruct{1}.gear.aux_pos   = vehicleStruct{1}.cg + [-0.5; 0; 0.5*refLengthScaled];
+% 
+% vehicleStruct{1}.gear.main_stiff = 0.4*vehicleStruct{1}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
+% vehicleStruct{1}.gear.aux_stiff = 0.2*vehicleStruct{1}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
+% vehicleStruct{1}.gear.main_damp  = 5*vehicleStruct{1}.m;                 % N/(m/s)
+% vehicleStruct{1}.gear.aux_damp  = 2*vehicleStruct{1}.m;                 % N/(m/s)
 
 % FunCub XL
-vehicleStruct{2}.type = 3;
+vehicleStruct{2}.type = 2;
 vehicleStruct{2}.name = 'funcubXL';
 vehicleStruct{2}.m = 4;
 vehicleStruct{2}.J = [0.14145 0 0.01045; 0 0.11240 0;0.01045 0 0.23326];
@@ -243,16 +242,16 @@ vehicleStruct{2}.b = 1.7;
 vehicleStruct{2}.chord = 0.26;
 vehicleStruct{2}.fuselage = 10; %Lateral fuselage cross section
 
-refLengthScaled = 0.2;
-
-vehicleStruct{2}.gear.right_pos  = vehicleStruct{2}.cg + [0.17; 0.18; refLengthScaled];
-vehicleStruct{2}.gear.left_pos   = vehicleStruct{2}.cg + [0.17; -0.18; refLengthScaled];
-vehicleStruct{2}.gear.aux_pos   = vehicleStruct{2}.cg + [-0.5; 0; refLengthScaled];
-
-vehicleStruct{2}.gear.main_stiff = 0.2*vehicleStruct{2}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
-vehicleStruct{2}.gear.aux_stiff = 0.4*vehicleStruct{2}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
-vehicleStruct{2}.gear.main_damp  = 2*vehicleStruct{2}.m;                 % N/(m/s)
-vehicleStruct{2}.gear.aux_damp  = 5*vehicleStruct{2}.m ;                 % N/(m/s)
+% refLengthScaled = 0.2;
+% 
+% vehicleStruct{2}.gear.right_pos  = vehicleStruct{2}.cg + [0.17; 0.18; refLengthScaled];
+% vehicleStruct{2}.gear.left_pos   = vehicleStruct{2}.cg + [0.17; -0.18; refLengthScaled];
+% vehicleStruct{2}.gear.aux_pos   = vehicleStruct{2}.cg + [-0.5; 0; refLengthScaled];
+% 
+% vehicleStruct{2}.gear.main_stiff = 0.2*vehicleStruct{2}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
+% vehicleStruct{2}.gear.aux_stiff = 0.4*vehicleStruct{2}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
+% vehicleStruct{2}.gear.main_damp  = 2*vehicleStruct{2}.m;                 % N/(m/s)
+% vehicleStruct{2}.gear.aux_damp  = 5*vehicleStruct{2}.m ;                 % N/(m/s)
 
 end
 

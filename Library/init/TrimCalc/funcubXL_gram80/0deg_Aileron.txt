@@ -1,0 +1,158 @@
+Type 7 (Stability analysis)
+3D-Panels/VLM2
+
+VInf  = 31.883 m/s
+Alpha =   0.39°
+Mass  =   0.000 kg
+Control value =  0.00
+
+XNP =   0.127 m
+XCP =   0.078 m
+YCP =  -0.000 m
+ZCP =   0.005 m
+
+CL  =   0.14895
+CD  =   0.00098
+VCD =   0.00000
+ICD =   0.00098
+CX  =   0.00098
+CY  =  -0.00000
+Cl  =  -0.00002
+Cm  =   0.00000
+ICm =   0.00000
+VCm =   0.00000
+Cn  =   0.00000
+ICn =   0.00000
+VCn =   0.00000
+
+
+Non-dimensional Stability Derivatives:
+CXu  =  -0.00196
+CLu  =  -0.00001
+Cmu  =   0.00000
+
+CXa  =   0.07200
+CLa  =   4.93343
+Cma  =  -0.94245
+
+CXq  =  -0.07137
+CLq  =   9.22947
+Cmq  = -14.16998
+
+CYb  =  -0.35320
+Clb  =  -0.02312
+Cnb  =   0.13937
+
+CYp  =   0.11518
+Clp  =  -0.50470
+Cnp  =  -0.07139
+
+CYr  =   0.31510
+Clr  =   0.06707
+Cnr  =  -0.12619
+
+Non-dimensional Control Derivatives:
+CXd  =  -0.00715
+CYd  =  -0.01419
+CZd  =  -0.94898
+Cld  =  -0.17673
+Cmd  =  -1.62715
+Cnd  =   0.00515
+
+
+Longitudinal modes:
+  Eigenvalue    =  -30.62222-  19.47893i
+  Undamped Natural Frequency =    5.776 Hz
+  Damped Natural Frequency   =    3.100 Hz
+  Damping Ratio              =    0.844 
+  Normalized Eigenvector:
+    u/u0          =    0.03136+   0.00000i
+    w/u0          =    9.70053+   1.18419i
+    q/(2.u0.MAC)  =   -0.74622-   0.90831i
+    theta(rad)    =    1.00000+   0.00000i
+
+  Eigenvalue    =  -30.62222+  19.47893i
+  Undamped Natural Frequency =    5.776 Hz
+  Damped Natural Frequency   =    3.100 Hz
+  Damping Ratio              =    0.844 
+  Normalized Eigenvector:
+    u/u0          =    0.03136+   0.00000i
+    w/u0          =    9.70053-   1.18419i
+    q/(2.u0.MAC)  =   -0.74622+   0.90831i
+    theta(rad)    =    1.00000+   0.00000i
+
+  Eigenvalue    =   -0.00091-   0.35192i
+  Undamped Natural Frequency =    0.056 Hz
+  Damped Natural Frequency   =    0.056 Hz
+  Damping Ratio              =    0.003 
+  Normalized Eigenvector:
+    u/u0          =    0.03136+   0.00000i
+    w/u0          =   -0.00075-   0.00001i
+    q/(2.u0.MAC)  =    0.00005+   0.00000i
+    theta(rad)    =    1.00000+   0.00000i
+
+  Eigenvalue    =   -0.00091+   0.35192i
+  Undamped Natural Frequency =    0.056 Hz
+  Damped Natural Frequency   =    0.056 Hz
+  Damping Ratio              =    0.003 
+  Normalized Eigenvector:
+    u/u0          =    0.03136+   0.00000i
+    w/u0          =   -0.00075+   0.00001i
+    q/(2.u0.MAC)  =    0.00005-   0.00000i
+    theta(rad)    =    1.00000+   0.00000i
+
+
+Lateral modes:
+  Eigenvalue    =  -33.03524+   0.00000i
+  Undamped Natural Frequency =    0.000 Hz
+  Damped Natural Frequency   =    0.000 Hz
+  Damping Ratio              =    0.000 
+  Time to double            =    0.021s
+  Time constant              =   0.030
+  Normalized Eigenvector:
+    v/u0          =    0.03136+   0.00000i
+    p/(2.u0.Span) =    0.15903+   0.00000i
+    r/(2.u0.Span) =    0.02463+   0.00000i
+    phi(rad)      =    1.00000+   0.00000i
+
+  Eigenvalue    =   -3.53944-  16.53732i
+  Undamped Natural Frequency =    2.692 Hz
+  Damped Natural Frequency   =    2.632 Hz
+  Damping Ratio              =    0.209 
+  Normalized Eigenvector:
+    v/u0          =    0.03136+   0.00000i
+    p/(2.u0.Span) =   -0.00126+   0.00098i
+    r/(2.u0.Span) =    0.00217+   0.01287i
+    phi(rad)      =    1.00000+   0.00000i
+
+  Eigenvalue    =   -3.53944+  16.53732i
+  Undamped Natural Frequency =    2.692 Hz
+  Damped Natural Frequency   =    2.632 Hz
+  Damping Ratio              =    0.209 
+  Normalized Eigenvector:
+    v/u0          =    0.03136+   0.00000i
+    p/(2.u0.Span) =   -0.00126-   0.00098i
+    r/(2.u0.Span) =    0.00217-   0.01287i
+    phi(rad)      =    1.00000+   0.00000i
+
+  Eigenvalue    =    0.02739+   0.00000i
+  Undamped Natural Frequency =    0.000 Hz
+  Damped Natural Frequency   =    0.000 Hz
+  Damping Ratio              =    0.000 
+  Time to double            =   25.308s
+  Normalized Eigenvector:
+    v/u0          =    0.03136+   0.00000i
+    p/(2.u0.Span) =    0.00293+   0.00000i
+    r/(2.u0.Span) =    0.03284+   0.00000i
+    phi(rad)      =    1.00000+   0.00000i
+
+Phillips Phugoid eq.38 JOURNAL OF AIRCRAFT Vol. 37, No. 1, January–February 2000
+  Eigenvalue    =  -0.00110+  0.34356i
+     Undamped Natural Frequency =    0.055 Hz
+     Damped Natural Frequency   =    0.055 Hz
+     Damping Ratio              =    0.003 
+Phillips Dutch-Roll eq. 28 JOURNAL OF AIRCRAFT Vol. 37, No. 3, May–June 2000
+  Eigenvalue    =  -3.57181+ 16.52351i
+     Undamped Natural Frequency =    2.691 Hz
+     Damped Natural Frequency   =    2.630 Hz
+     Damping Ratio              =    0.211 

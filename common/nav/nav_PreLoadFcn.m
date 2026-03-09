@@ -8,7 +8,7 @@ defineBuses(fullfile(projectRoot,'common','msg'));
 
 if ~exist('navParams','var') || ~exist('navConsts','var')
     navParams = defineParameters_nav();
-    navConsts = defineConstants_nav();
+    navConsts = defineConstants_nav(vehicle);
     [navConsts, navPara]=initParametersAndConstants(navParams,navConsts,'nav');
 end
 

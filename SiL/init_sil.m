@@ -10,8 +10,8 @@ projectRoot = slproject.getCurrentProject().RootFolder;
 %% Define airfield and aircraft
 LOCATION_FLAG_TO = 7;
 LOCATION_FLAG_LDG = 6;
-AIR_START_FLAG = 0; %off
-vehicleType = 2; %funcub
+AIR_START_FLAG = 1;
+vehicleType = 2; %Gram80
 
 %% Simulation Environment
 initLibrary();
@@ -37,15 +37,6 @@ end
 %% Open model
 load_system('gnc')
 load_system('nav')
-
-if AIR_START_FLAG
-    vehicle = adjustLocation(vehicle,ldg_rnwy,afmaPara);
-    defaultConsts.wind_augment = 0;
-    defaultConsts.wind_start = 5;
-else
-    defaultConsts.wind_augment = 0;
-    defaultConsts.wind_start = 120;
-end
 
 open("SiL_gram.slx");
 
