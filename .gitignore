@@ -1,0 +1,6 @@
+slprj/
+cache/
+*.autosave
+*.slxc
+*.r20*
+*.db

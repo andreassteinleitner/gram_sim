@@ -1,0 +1,74 @@
+Mode-Indices:
+
+Longitudinal:
+-	1X: THR
+o	10: THR_TOGA
+o	11: THR_IDLE
+o	12: THR_DECEL
+o	13: THR_CLB
+-	2X: SPD
+o	20: SSPD
+o	21: MSPD
+
+Lateral:
+-	1X: LNAV
+o	10: LNAV_TRAJ (trajectory tracking)
+o	11: LNAV_RWY (runway centerline tracking)
+o	12: LNAV_ALGN (align nose with centerline)
+-	2X: HDG
+o	20: HDG
+
+Vertical:
+-	1X: VNAV
+o	10: VNAV_TRAJ
+o	11: VNAV_TOGA
+o	12: VNAV_FCU
+o	13: VNAV_ARM
+o	14: VNAV_FLCH
+o	15: VNAV_ROT
+o	16: VNAV_FL
+o	17: VNAV_TD
+o	18: VNAV_DEROT
+o	19: VNAV_GR
+-	2X: FLCH/ALT
+o	20: FLCH
+o	21: ALT
+-	3X: VS
+o	30: VS
+o	31: TOGA
+
+Status-ID:
+
+longitudinal direction:
+- direct thrust command (act)
+- speed command (path)
+
+lateral direction:
+- direct aileron (act)								11
+- direct rudder (act)								12
+- direct ail&rud (act)								13
+- coordinated flight -> beta=0 (attitude)			31
+- heading tracking -> psi (attitude)				32
+- track reference -> chi (path)						41
+- direct roll angle -> phi (attitude)				33
+
+vertical direction:
+- direct elevator (act)								11
+- direct rotation -> q (rate)						21
+- direct pitch angle -> theta (attitude)			31
+- flight path angle tracking -> gamma (path)		41
+- 
+
+
+output = (x1, x2, x3)
+
+lateral direction: control_mode(2)==11 %--> check if direct aileron command is activated
+vertical direction: control_mode(3)==11 %--> check if direct elevator command is activated
+
+Guidance output:
+
+act_cmd (3)
+rte_cmd (3)
+att_cmd (5)
+pth_cmd (3)
+ctrl_mde(3)

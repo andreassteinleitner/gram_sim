@@ -17,8 +17,16 @@ vehicleType = 1;
 initLibrary();
 
 %% Buses and parameters
-defineBuses(fullfile(projectRoot,'common','msg'));
-[defaultConsts,~]=initParametersAndConstants(struct([]),defineConstants(vehicle),'default');
+ifrcg_codegen_path = '';
+[~, Specs_Codegen, Specs_Internal]  = preparations(ifrcg_codegen_path);
+Specs_Model = readSimulinkModelSpecs(model_path, Specs_Internal.model.model_specs_file); % read model specs file
+Specs_Merged = mergeSpecs(Specs_Codegen, Specs_Model); % Merge CodeGen and Model Specs in one universal specification file
+PX4_Paths = getPX4Paths(Specs_Merged, Specs_Internal); % Get all relevant paths within the PX4 Source Code
+work_dir = setWorkingDirectory(Specs_Merged); % Set working directory (creates it if necessary)
+defineCodeGenInternalBuses(Specs_Merged, Specs_Internal, BUS_NAME_SEPARATOR); % Call function to create CodeGen internal buses
+
+% defineBuses(fullfile(projectRoot,'common','msg'));
+% [defaultConsts,~]=initParametersAndConstants(struct([]),defineConstants(vehicle),'default');
 
 %% Mission
 defaultWP.flightplan = [4, 0, 0;-300, -200, -60;-300, -1200, -60;150, -600, -60;-100, -200, -60;zeros(16,3)];

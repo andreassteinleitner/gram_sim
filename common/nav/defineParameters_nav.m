@@ -13,8 +13,8 @@ else
 end
 
 %% navigation params
-params.imu_filt.use_acc   = struct('default', 1, 'description', 'Decide if IMU filter module should be used for accelerations (1) or not (0)', 'name', 'IMU_FIL_ACC', 'group','IFR_NAV');
-params.imu_filt.use_rte   = struct('default', 1, 'description', 'Decide if IMU filter module should be used for angular velocities (1) or not (0)', 'name', 'IMU_FIL_RTE', 'group','IFR_NAV');
+params.use_acc   = struct('default', 1, 'description', 'Decide if IMU filter module should be used for accelerations (1) or not (0)', 'name', 'IMU_FIL_ACC', 'group','IFR_NAV');
+params.use_rte   = struct('default', 1, 'description', 'Decide if IMU filter module should be used for angular velocities (1) or not (0)', 'name', 'IMU_FIL_RTE', 'group','IFR_NAV');
 
 params.sigmaMag=struct('default', 0.115, 'description', 'magnetic field measurement standard deviation', 'name', 'MAG_STD', 'group','IFR_NAV');
 params.sigmaGpsPosXy=struct('default', 1.5, 'description', 'GPS horizontal (x-y-axis) position standard deviation', 'unit', 'm', 'name', 'GPS_HPOS_STD', 'group','IFR_NAV');

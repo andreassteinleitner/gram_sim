@@ -1,0 +1,284 @@
+# This file contains model specifications for the IFR Code Generation for PX4.
+# It MAY be placed in a model folder to give some specifications for the model.
+
+# Usage: 
+#	All lines without a '#' contain relevant specifications for the IFR CodeGen. 
+#	A '#' can be used to comment out lines and thus disable specifications.
+#	A ':=:' is used to separate the specification name from the actual specification value
+#	All specifications are completely optional.
+# 	All specifications in this file are model-specific. Applied only to the model in its folder it is placed in. For universal settings see TEMPLATE_CodeGenSpecs.txt.
+#  Model-specific specifications will usually overwrite any default specifications given for all models in the universal CodeGenSpecs.
+#  Sometimes the default specifications are not overwritten. Instead they are expanded with the model's specification. If this is the case it will be noted in the description. 
+#	To add or expand some specification just add a new line.
+#	Further Infos about the specifications can be found in the IFR CodeGen README.
+
+# This file contains all necessary specifications for a model to be used with the IFR Code Generation for PX4.
+
+
+# -------------------------------------------
+# --- CodeGen General Specifications Part ---
+# -------------------------------------------
+#
+# These specifications define how the IFR CodeGen executes its tasks.
+
+# Path to the directory the CodeGen uses to compile the C-Code from the Simulink-Models. The user must have full privileges for this directory. 
+# This is a mandatory specification.
+# It is recommended to use a top level directory on any drive (e.g. C:\IFR_CodeGen_WorkDir), as the IFRCodeGen will automatically create various subfolders for every opened model.
+# It is NOT recommended to place the working directory within the WSL. Performance issues may occur.
+# The user can specify a full or relative path. The latter uses "..\" to specify moving up in the file structure and is relative to the IFR CodeGen's main directory.
+# Only a single "work_dir" value may be specified.
+#work_dir :=: C:\IFR_CodeGen_WorkDir	# Example for an absolute path to the CodeGen working directory
+#work_dir :=: ..\IFR_CodeGen_WorkDir	# Example for a relative path to the CodeGen working directory
+
+# Flag to force the IFR CodeGen to evaluate all found UORB/Topic definitions.
+# By default the IFR CodeGen will only evaluate (e.g. creating Simulink Bus Object) UORB/Topic definitions that are relevant to the opened model.
+# If no such specification is given, the IFR CodeGen will stick to the default behavior.
+# The only possible value to force evaluation of all UORB/Topic definitions is "true". All other values will be silently ignored.
+eval_all_uorbs :=: true
+
+# Flag to enable an additional ordering of a model's parameters into group(s). 
+# If enabled the parameter struct and also the parameter buses will get an additional level, which separates parameters by their specified parameter group(s).
+# By default the IFR CodeGen will not use the parameters' group(s) within structs and buses as an ordering instrument/level.
+# If no such specification is given, the IFR CodeGen will stick to the default behavior.
+# The only possible value to enable an additional ordering of a model's parameters into group(s) is "true". All other values will be silently ignored.
+param_group_order :=: true
+
+# ---------------------------------------------------
+# --- CodeGen Model Specifications Part ---
+# ---------------------------------------------------
+#
+# These specifications are applied to all models the IFR CodeGen works with.
+
+# Specify name of main model. The IFR CodeGen will identify a model with this name as the main model, if multiple models are identified.
+# For other possibilities to set the main model see the README.
+# Info: the ".slx" MUST added to any model name. 
+# Only one main model name may be specified.
+main_model :=: gnc_simplified.slx
+
+# Name of directories, which should be excluded from the search for valid Simulink models.
+# Will expand universal CodeGenSpecs.
+# Multiple directories may be specified.
+exclude_dirs :=: development
+exclude_dirs :=: functions
+
+# Name of Simulink models, which are NO valid models for the IFR CodeGen.
+# Will expand universal CodeGenSpecs.
+# Info: the ".slx" MUST added to any model name. 
+# Multiple model names may be specified.
+# exclude_models :=: example_simulink_model_advanced_invalid.slx
+
+# Name of subfolders which should NOT be on the Matlab path for an opened model. Usually all subfolders within the model-folder will be added to the Matlab path too.
+# Will expand universal CodeGenSpecs.
+# To specify nested subfolders use relative names. See the example below.
+# Multiple paths to subfolders may be specified.
+remove_path_dirs :=: development
+
+# Name of folders which should be added to the Matlab path for an opened model. Also all subfolder will be added to the Matlab path.
+# Usually all subfolders within the model-folder will be added to the Matlab path too. This setting is for adding outside folders.
+# Will expand universal CodeGenSpecs.
+# The user can specify a full or relative path. The latter uses "..\" to specify moving up in the file structure and is relative to the model's main directory.
+# Multiple folders may be specified.
+#add_path_dirs :=: ..\Example_Folder 							# Example for a relative path to a directory to be added to the Matlab path
+#add_path_dirs :=: C:\Example_Folder\Example_Subfolder 	# Example for an absolute path to a directory to be added to the Matlab path
+
+# Lines of code to be executed BEFORE opening a model.
+# Will expand universal CodeGenSpecs.
+# This may include simple commands, function calls or complex calculations. For inspiration see the examples below.
+# Info: If functions are called they must be in the Matlab path (use "add_path_dir" if necessary).
+# Info: as the code is executed within a function, variables may need to be assigned to base workspace (see example below)
+# For code to be executed AFTER opening the model see "execute_after".
+# Multiple lines of code may be specified.
+#execute_before :=: output_variable = 2;													# Example to set an variable
+#execute_before :=: output_variable = example_function(input_variable_1, input_variable_2)	# Example function be called
+#execute_before :=: assignin('base','example_variable', example_variable);					# Example to assign the example_variable to the base workspace
+
+# Lines of code to be executed AFTER opening a model.
+# Will expand universal CodeGenSpecs.
+# This may include simple commands, function calls or complex calculations. For inspiration see the examples below.
+# Info: If functions are called they must be in the Matlab path (use "add_path_dir" if necessary).
+# Info: as the code is executed within a function, variables may need to be assigned to base workspace (see example below)
+# For code to be executed BEFORE opening the model see "execute_before".
+# Multiple lines of code may be specified.
+#execute_after :=: output_variable = 2;														# Example to set an variable
+#execute_after :=: output_variable = example_function(input_variable_1, input_variable_2)	# Example function be called
+#execute_after :=: assignin('base','example_variable', example_variable);					# Example to assign the example_variable to the base workspace
+
+# Names of Matlab scripts, which should be called BEFORE opening a model.
+# Will expand universal CodeGenSpecs.
+# The files containing the scripts must either be on the Matlab path (use "add_path_dir" if necessary), or the path is given directly (see examples below).
+# The user can specify a full or relative path. The latter uses "..\" to specify moving up in the file structure and is relative to the model's directory.
+# For scripts to be called AFTER opening the model see "run_scripts_after".
+# Multiple script names may be specified.
+#run_scripts_before :=: example_script.m						# Example to run a script, which is on the path
+#run_scripts_before :=: ..\Example_Folder\example_script.m 		# Example for a relative path to a script 
+#run_scripts_before :=: C:\Workspace\GramDynamics\Simulation\common\gnc\gnc_PreLoadFcn.m 		# Example for an absolute path to a script
+
+# Names of Matlab scripts, which should be called AFTER opening a model.
+# Will expand universal CodeGenSpecs.
+# The files containing the scripts must either be on the Matlab path (use "add_path_dir" if necessary), or the path is given directly (see examples below).
+# The user can specify a full or relative path. The latter uses "..\" to specify moving up in the file structure and is relative to the model's directory.
+# For scripts to be called BEFORE opening the model see "run_scripts_before".
+# Multiple script names may be specified.
+#run_scripts_after :=: example_script.m							# Example to run a script, which is on the path
+#run_scripts_after :=: ..\Example_Folder\example_script.m 		# Example for a relative path to a script 
+#run_scripts_after :=: C:\Example_Folder\example_script.m 		# Example for an absolute path to a script
+
+# Specifications for Simulink models, opened via the IFR CodeGen.
+# May also be used to specify configurations of the Simulink Coder for a model.
+# Will expand universal CodeGenSpecs.
+# Uses the "setparam()" function. For possible parameters and values see the configuration reference site.
+# Every configuration must be specified as parameter:value separated with a colon. 
+# Multiple configurations may be specified.
+#simulink_configs :=: StopTime:inf						# Example for a Simulink Configuration to set the stop time to infinity
+#simulink_configs :=: MaxIdLength:63					# Example to set the maximum number of characters in generated function, type definition, variable names.
+
+# CodeGen file (Matlab function) to define buses for a model, which has to be placed within the model's folder.
+# This function will automatically be evaluated by the IFR CodeGen when opening a model or generating the code.
+# A template resp. example is provided in the example models of the IFR CodeGen.
+# If no file name is specified, the IFR CodeGen looks for a file named "IfrCgDefineBuses.m". If this does not exist, it is assumed that no buses should be defined. This is also a valid behavior.
+# This setting is universal and will be applied to all models.
+# It is also possible to specify a file located in a subfolder of the model's main directory. See example below.
+# Info: If the user wants to run a script/function to define buses for ALL or MULTIPLE of his models this is NOT the correct specification. Use "execute_before" or "run_scripts_before" for this task.
+# Only a single file may be specified.
+#define_buses_file :=: defineBusesExample.m
+#define_buses_file :=: codegen\defineBusesExample.m
+
+# CodeGen file (Matlab function) to define constants for a model, which has to be placed within the model's folder.
+# This function will automatically be evaluated by the IFR CodeGen when opening a model or generating the code.
+# A template resp. example is provided in the example models of the IFR CodeGen.
+# If no file is specified, the IFR CodeGen looks for a file named "IfrCgDefineConstants.m". If this does not exist, it is assumed that no constants should be defined. This is also a valid behavior.
+# This setting is universal and will be applied to all models.
+# It is also possible to specify a file located in a subfolder of the model's main directory. See example below.
+# Info: If the user wants to run a script/function to define constants for ALL or MULTIPLE of his models this is NOT the correct specification. Use "execute_before" or "run_scripts_before" for this task.
+# Only a single file may be specified.
+#define_constants_file :=: defineConstantsExample.m
+#define_constants_file :=: codegen\defineBusesExample.m
+
+# CodeGen file (Matlab function) to define parameters for a model, which has to be placed within the model's folder.
+# This function will automatically be evaluated by the IFR CodeGen when opening a model or generating the code.
+# A template resp. example is provided in the example models of the IFR CodeGen.
+# If no file is specified, the IFR CodeGen looks for a file named "IfrCgDefineParameters.m". If this does not exist, it is assumed that no parameters should be defined. This is also a valid behavior.
+# This setting is universal and will be applied to all models.
+# It is also possible to specify a file located in a subfolder of the model's main directory. See example below.
+# Info: It is NOT possible to define parameters for ALL or MULTIPLE of his models with this specification. Parameters are always model-specific.
+# Only a single file may be specified.
+#define_parameters_file :=: defineParametersExample.m
+#define_parameters_file :=: codegen\defineBusesExample.m
+
+# Path to directories containing UORB definitions provided by the model.
+# These UORB definitions will always be evaluated and automatically added to the PX4 source code when generating the code for a module.
+# Will expand universal CodeGenSpecs.
+# The user can specify a full or relative path. The latter uses "..\" to specify moving up in the file structure and is relative to the model's main directory.
+# The IFR CodeGen also looks for default folder named "ifrcg_uorb_defs" within the model's main folder. Do NOT include it with this option a second time.
+# Multiple paths to folders with UORB definitions can be specified
+#uord_def_dirs :=: uorb_folder_example
+#uord_def_dirs :=: C:\uorb_folder_example
+#uord_def_dirs :=: ..\uorb_folder_example	
+#uord_def_dirs :=: C:\Users\Pauli\Desktop\uorb_defs
+
+# Additional UORBs/Topics which should be evaluated when opening the model.
+# By default the IFR CodeGen will only evaluate UORB/Topic definitions for topics being an input or output of the model.
+# This specification is for example helpful if a specific UORB constants is required, which is defined in a random UORB/Topic
+# Will expand universal CodeGenSpecs.
+# Info: this specification is irrelevant, if "eval_all_uorbs" is set to true (see above in general).
+# Info: the UORB can be given in snake_case or PascalCase and with or without the .msg extension
+# Multiple UORBs can be specified
+# additional_uorbs :=: VehicleLocalPosition.msg
+# additional_uorbs :=: SensorGps.msg
+
+# Flag to activate filling the field 'arm_time_us' of Clock/Time Bus, which is the time since flight controller (Pixhawk) has been armed in microseconds [us].
+# By default the IFR CodeGen will not fill this field.
+# If no such specification is given, the IFR CodeGen will stick to the default behavior.
+# Warning: activation adds an additional UORB subscription `VehicleStatus.msg` to the generated module. The total number of UORB subscriptions should not exceed a certain limit.
+# The only possible value to activate filling the field 'arm_time_us' of Clock/Time Bus is "true". All other values will be silently ignored.
+fill_arm_time_us :=: true
+
+# Flag to activate filling the field 'gnss_time_us' of Clock/Time Bus, which is the continuous GNSS Epoch Time (since 01.01.1970) in microseconds [us].
+# By default the IFR CodeGen will not fill this field.
+# If no such specification is given, the IFR CodeGen will stick to the default behavior.
+# Warning: activation adds an additional UORB subscription `SensorGps.msg` to the generated module. The total number of UORB subscriptions should not exceed a certain limit.
+# The only possible value to activate filling the field 'gnss_time_us' of Clock/Time Bus is "true". All other values will be silently ignored.
+fill_gnss_time_us :=: true
+
+# ----------------------------------------------------
+# --- CodeGen Module Specifications Part ---
+# ----------------------------------------------------
+#
+# These specifications are applied to all PX4 modules the IFR CodeGen works with or creates.
+# They may be overwritten by module-specific specifications.
+
+# Set name of a PX4 module created from this Simulink model.
+# If no name is given it will be created automatically based on the main model's name.
+# Info: the name will be converted to snake-case automatically.
+# Info: if given within CodeGenSpecs.txt or CodeGenModelSpecs.txt the "prefix_module" will be added automatically.
+# Only one module name may be specified.
+module_name :=: gnc_simplified
+
+# Name of subfolder within the PX4\msg directory, which will contain model/module's own topic/UORB-definitions. 
+# Directory (if given) will be used, when topic/UORB-definitions are automatically moved from a module/model directory to PX4 source code. 
+# Otherwise the default PX4\msg folder for topic/UORB-definitions will be used.
+# Only a single directory may be specified.
+#uorb_dir :=: ifr
+
+# Default stack size for modules created as an individual PX4 task. 
+# Only one stack size may be specified.
+module_stacksize :=: 10000
+
+# Default execution interval for CodeGen's main loop.
+# This is the outer loop doing mainly UORB/topic subscriptions and publications.
+# It must be given in seconds. For example a value of "0.01" means that the loop is executed every 0.01s (=100Hz)
+# Only one execution interval may be specified.
+#main_loop_interval :=: 0.01
+
+# Default execution interval for model loop.
+# This is the inner loop running the model's code resp. algorithm.
+# It must be given in seconds. For example a value of "0.01" means that the loop is executed every 0.01s (=100Hz)
+# Only one execution interval may be specified.
+#model_loop_interval :=: 0.01
+
+
+# ------------------------------------------------------
+# --- CodeGen Naming Conventions Specifications Part ---
+# ------------------------------------------------------
+#
+# These specifications change how the IFR CodeGen does its automatically naming of files, variables etc.
+# If none of the specifications is given the CodeGen falls back to its default values, which are identical to the examples below.
+# Additional info about the IFR CodeGens naming convention can be found in the README. 
+
+# General Prefix for the IFR CodeGen. Will be used to distinguish automatically created variables/structs and Bus Objects in Matlab and Simulink.
+# To disable the usage of the prefix specify the keyword: NO_CODEGEN_PREFIX 
+# Only a single prefix may be specified.
+#prefix_codegen :=: IFRCG
+#prefix_codegen :=: NO_CODEGEN_PREFIX
+
+# Prefix which is added to all created Simulink Bus Objects. 
+# Only a single prefix may be specified.
+#prefix_bus :=: Bus
+
+# Prefix for model. May be used to distinguish different models by automatically adding the prefix to automatically named variables, files, busses etc.
+# Only one model prefix may be specified.
+# prefix_model :=: Ex_Adv
+
+# Prefix which is added to all created PX4 modules using the CodeGen to easily distinguish them. 
+# Only a single prefix may be specified.
+prefix_module :=: ifrcg
+
+# Name for variable/struct and Simulink Bus Object created from given PX4 parameter definitions
+# Only a single name may be specified.
+name_params :=: Params_Gnc
+
+# Name for variable/struct and Simulink Bus Object created from given constant definitions
+# Only a single name may be specified.
+#name_constants :=: CONSTANTS
+
+# Name for variable/struct created from UORB/Topic definitions 
+# Only a single prefix may be specified.
+#name_uorb :=: Uorbs
+
+# Prefix which is added to all created Simulink Bus Objects from UORB/Topic definitions 
+# Only a single prefix may be specified.
+#prefix_uorb_bus :=: Uorb
+
+# Name for variable/struct and Simulink Bus Object created from constant definitions found in UORB/Topic definitions 
+# Only a single name may be specified.
+#name_uorb_constants :=: CONSTANTS_UORB
