@@ -8,6 +8,6 @@ defineBuses(fullfile(projectRoot,'common','msg'));
 
 if ~exist('gncParams','var') || ~exist('gncConsts','var')
     gncParams = defineParameters_gnc();
-    gncConsts = defineConstants_gnc(vehicle);
+    gncConsts = defineConstants_gnc();
     [gncConsts, gncPara]=initParametersAndConstants(gncParams,gncConsts,'gnc');
 end

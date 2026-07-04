@@ -37,7 +37,7 @@ cmake_policy(SET CMP0057 NEW)
 include(px4_list_make_absolute)
 
 set(msg_files
-	ac_coeffs.msg
+	accel_monitor.msg
 	action_request.msg
 	actuator_armed.msg
 	actuator_controls.msg
@@ -49,13 +49,9 @@ set(msg_files
 	actuator_servos_trim.msg
 	actuator_test.msg
 	adc_report.msg
-	airdata.msg
 	airspeed.msg
 	airspeed_validated.msg
 	airspeed_wind.msg
-	altitude.msg
-	ap_state.msg
-	atol_para.msg
 	autotune_attitude_control_status.msg
 	battery_status.msg
 	button_event.msg
@@ -86,7 +82,6 @@ set(msg_files
 	event.msg
 	follow_target.msg
 	failure_detector_status.msg
-	fuzzy_monitor.msg
 	generator_status.msg
 	geofence_result.msg
 	gimbal_device_attitude_status.msg
@@ -153,6 +148,7 @@ set(msg_files
 	radio_status.msg
 	rate_ctrl_status.msg
 	rc_channels.msg
+	rc_gnc_output.msg
 	rc_mode.msg
 	rc_parameter_map.msg
 	rc_trim.msg
@@ -232,8 +228,8 @@ set(msg_files
 	waypoint_list.msg
 	waypoint_list_ned.msg
 	waypoints_atol.msg
-	wheel_encoders.msg
 	wind.msg
+	wheel_encoders.msg
 	yaw_estimator_status.msg
 )
 

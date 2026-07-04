@@ -19,6 +19,8 @@ params.trim_switch = struct('default', 0, 'description', 'Set autopilot into tri
 
 params.controller_selector = struct('default', 0, 'description', 'Select contoller type, (0) INDI, (1) MODAL', 'name', 'G_CONTROL_SEL', 'group','IFR_GNC');
 params.imu_filt_ang_acc = struct('default', 1, 'description', 'Decide if IMU filter module should be used for angular accelerations (1) or not (0)', 'name', 'IMU_FIL_DRTE', 'group','IFR_GNC');
+params.trk_der_switch = struct('default', 1, 'description', 'Decide if track derivatives should be calculated from acceleration measurements (1) or from numerical differentiation (2-6)', 'name', 'G_TRK_DERIV', 'group','IFR_GNC');
+params.wp_tracking = struct('default', 0, 'description', 'WP tracking active', 'name', 'G_WP_TRKING', 'group','IFR_GNC');
 
 %% ATOL parameters
 params.h_fake       = struct('default', 0, 'description', 'Perform fake landing at defined altitude', 'min', 0, 'name', 'A_FAK_ALT', 'group','IFR_GNC');
@@ -117,33 +119,42 @@ params.indi.inertia_xz = struct('default', 0.545, 'description', 'Inertia xz', '
 % params.indi.inertia_xz = struct('default', 0.0104, 'description', 'Inertia xz', 'name', 'I_INERT_XZ', 'group','IFR_GNC');
 
 %% Modal
-params.lonCruise.K_ALPHA_ETA=struct('default', 0, 'description', 'short period alpha', 'unit', 'Gs', 'name', 'CR_K_A_ETA', 'group','IFR_GNC');
-params.lonCruise.K_Q_ETA=struct('default', -30, 'description', 'short period damper', 'unit', 'Gs', 'name', 'CR_K_Q_ETA', 'group','IFR_GNC');
-params.lonCruise.K_V_ETA=struct('default', 0, 'description', 'pyhgoid damper (increase for increased damping)', 'unit', 'Gs', 'name', 'CR_K_V_ETA', 'group','IFR_GNC');
-params.lonCruise.K_GAMMA_ETA=struct('default', -240, 'description', 'phygoid spring (increase gain for faster response)', 'unit', 'Gs', 'name', 'CR_K_Y_ETA', 'group','IFR_GNC');
-params.lonCruise.I_V_ETA=struct('default', 0, 'description', 'Integrator always 0', 'unit', 'Gs', 'name', 'CR_I_V_ETA', 'group','IFR_GNC');
-params.lonCruise.I_GAMMA_ETA=struct('default', -30, 'description', 'integrator gain (approx. 0.2*K_gamma_eta)', 'unit', 'Gs', 'name', 'CR_I_Y_ETA', 'group','IFR_GNC');
-params.lonCruise.K_ALPHA_DELTA=struct('default', 0, 'description', 'always 0', 'unit', 'Gs', 'name', 'CR_K_A_DELTA', 'group','IFR_GNC');
-params.lonCruise.K_Q_DELTA=struct('default', 0, 'description', 'always 0', 'unit', 'Gs', 'name', 'CR_K_Q_DELTA', 'group','IFR_GNC');
-params.lonCruise.K_V_DELTA=struct('default', 45, 'description', 'delta thrust for speed deviation', 'unit', 'Gs', 'name', 'CR_K_V_DELTA', 'group','IFR_GNC');
-params.lonCruise.K_GAMMA_DELTA=struct('default',0, 'description', 'Gain for increase in thrust for given delta gamma', 'unit', 'Gs', 'name', 'CR_K_Y_DELTA', 'group','IFR_GNC');
-params.lonCruise.I_V_DELTA=struct('default', 15, 'description', 'integrator for V deviation', 'unit', 'Gs', 'name', 'CR_I_V_DELTA', 'group','IFR_GNC');
-params.lonCruise.I_GAMMA_DELTA=struct('default', 0, 'description', 'always 0', 'unit', 'Gs', 'name', 'CR_I_Y_DELTA', 'group','IFR_GNC');
-params.lonCruise.K_TURN=struct('default', -12, 'description', 'gain for turn coordination', 'unit', 'Gs', 'name', 'CR_K_TURN', 'group','IFR_GNC');
-params.latCruise.K_R_XI=struct('default', 0, 'description', 'always 0 - r cannot be controlled by flying wing', 'unit', 'Gs', 'name', 'CR_K_R_XI', 'group','IFR_GNC');
-params.latCruise.K_BETA_XI=struct('default', 0, 'description', 'always 0 - no control in beta', 'unit', 'Gs', 'name', 'CR_K_BETA_XI', 'group','IFR_GNC');
-params.latCruise.K_P_XI=struct('default',   20, 'description', 'damping in roll about x-axis', 'unit', 'Gs', 'name', 'CR_K_P_XI', 'group','IFR_GNC');
-params.latCruise.K_PHI_XI=struct('default', 450, 'description', 'gain for rolling motion (spring)', 'unit', 'Gs', 'name', 'CR_K_PHI_XI', 'group','IFR_GNC');
-params.latCruise.I_BETA_XI=struct('default', 0, 'description', 'integrator for side slip deviation', 'unit', 'Gs', 'name', 'CR_I_BETA_XI', 'group','IFR_GNC');
-params.latCruise.I_PHI_XI=struct('default', 0.1, 'description', 'integrator for roll deviation', 'unit', 'Gs', 'name', 'CR_I_PHI_XI', 'group','IFR_GNC');
-params.latCruise.K_R_ZETA=struct('default', 0, 'description', 'always 0 - r cannot be controlled by flying wing', 'unit', 'Gs', 'name', 'CR_K_R_ZTA', 'group','IFR_GNC');
-params.latCruise.K_BETA_ZETA=struct('default', -10, 'description', 'always 0 - no control in beta', 'unit', 'Gs', 'name', 'CR_K_B_ZTA', 'group','IFR_GNC');
-params.latCruise.K_P_ZETA=struct('default', 0, 'description', 'damping in roll about x-axis', 'unit', 'Gs', 'name', 'CR_K_P_ZTA', 'group','IFR_GNC');
-params.latCruise.K_PHI_ZETA=struct('default', 0, 'description', 'gain for rolling motion (spring)', 'unit', 'Gs', 'name', 'CR_K_PHI_ZTA', 'group','IFR_GNC');
-params.latCruise.I_BETA_ZETA=struct('default', 0, 'description', 'integrator for side slip deviation', 'unit', 'Gs', 'name', 'CR_I_BTA_ZTA', 'group','IFR_GNC');
-params.latCruise.I_PHI_ZETA=struct('default', 0, 'description', 'integrator for roll deviation', 'unit', 'Gs', 'name', 'CR_I_PHI_ZTA', 'group','IFR_GNC');
-params.latCruise.P_CHI=struct('default', 0.05, 'description', 'gain for path azimuth deviation', 'unit', 'Gs', 'name', 'CR_K_PCHI', 'group','IFR_GNC');
-params.lonCruise.mainGain=struct('default', 100, 'description', 'Overall controller gain', 'unit', 'Gs', 'name', 'CR_MAINGAIN', 'group','IFR_GNC');
+params.lonCruise.K_ALPHA_ETA=struct('default', 0, 'description', 'short period alpha', 'name', 'CR_K_A_ETA', 'group','IFR_GNC');
+params.lonCruise.K_Q_ETA=struct('default', -30, 'description', 'short period damper', 'name', 'CR_K_Q_ETA', 'group','IFR_GNC');
+params.lonCruise.K_V_ETA=struct('default', 0, 'description', 'pyhgoid damper (increase for increased damping)', 'name', 'CR_K_V_ETA', 'group','IFR_GNC');
+params.lonCruise.K_GAMMA_ETA=struct('default', -240, 'description', 'phygoid spring (increase gain for faster response)', 'name', 'CR_K_Y_ETA', 'group','IFR_GNC');
+params.lonCruise.I_V_ETA=struct('default', 0, 'description', 'Integrator always 0', 'name', 'CR_I_V_ETA', 'group','IFR_GNC');
+params.lonCruise.I_GAMMA_ETA=struct('default', -30, 'description', 'integrator gain (approx. 0.2*K_gamma_eta)', 'name', 'CR_I_Y_ETA', 'group','IFR_GNC');
+params.lonCruise.K_ALPHA_DELTA=struct('default', 0, 'description', 'always 0', 'name', 'CR_K_A_DELTA', 'group','IFR_GNC');
+params.lonCruise.K_Q_DELTA=struct('default', 0, 'description', 'always 0', 'name', 'CR_K_Q_DELTA', 'group','IFR_GNC');
+params.lonCruise.K_V_DELTA=struct('default', 45, 'description', 'delta thrust for speed deviation', 'name', 'CR_K_V_DELTA', 'group','IFR_GNC');
+params.lonCruise.K_GAMMA_DELTA=struct('default',0, 'description', 'Gain for increase in thrust for given delta gamma', 'name', 'CR_K_Y_DELTA', 'group','IFR_GNC');
+params.lonCruise.I_V_DELTA=struct('default', 15, 'description', 'integrator for V deviation', 'name', 'CR_I_V_DELTA', 'group','IFR_GNC');
+params.lonCruise.I_GAMMA_DELTA=struct('default', 0, 'description', 'always 0', 'name', 'CR_I_Y_DELTA', 'group','IFR_GNC');
+params.lonCruise.K_TURN=struct('default', -12, 'description', 'gain for turn coordination', 'name', 'CR_K_TURN', 'group','IFR_GNC');
+params.latCruise.K_R_XI=struct('default', 0, 'description', 'always 0 - r cannot be controlled by flying wing', 'name', 'CR_K_R_XI', 'group','IFR_GNC');
+params.latCruise.K_BETA_XI=struct('default', 0, 'description', 'always 0 - no control in beta', 'name', 'CR_K_BETA_XI', 'group','IFR_GNC');
+params.latCruise.K_P_XI=struct('default',   20, 'description', 'damping in roll about x-axis', 'name', 'CR_K_P_XI', 'group','IFR_GNC');
+params.latCruise.K_PHI_XI=struct('default', 450, 'description', 'gain for rolling motion (spring)', 'name', 'CR_K_PHI_XI', 'group','IFR_GNC');
+params.latCruise.I_BETA_XI=struct('default', 0, 'description', 'integrator for side slip deviation', 'name', 'CR_I_BETA_XI', 'group','IFR_GNC');
+params.latCruise.I_PHI_XI=struct('default', 0.1, 'description', 'integrator for roll deviation', 'name', 'CR_I_PHI_XI', 'group','IFR_GNC');
+params.latCruise.K_R_ZETA=struct('default', 0, 'description', 'always 0 - r cannot be controlled by flying wing', 'name', 'CR_K_R_ZTA', 'group','IFR_GNC');
+params.latCruise.K_BETA_ZETA=struct('default', -10, 'description', 'always 0 - no control in beta', 'name', 'CR_K_B_ZTA', 'group','IFR_GNC');
+params.latCruise.K_P_ZETA=struct('default', 0, 'description', 'damping in roll about x-axis', 'name', 'CR_K_P_ZTA', 'group','IFR_GNC');
+params.latCruise.K_PHI_ZETA=struct('default', 0, 'description', 'gain for rolling motion (spring)', 'name', 'CR_K_PHI_ZTA', 'group','IFR_GNC');
+params.latCruise.I_BETA_ZETA=struct('default', 0, 'description', 'integrator for side slip deviation', 'name', 'CR_I_BTA_ZTA', 'group','IFR_GNC');
+params.latCruise.I_PHI_ZETA=struct('default', 0, 'description', 'integrator for roll deviation', 'name', 'CR_I_PHI_ZTA', 'group','IFR_GNC');
+params.latCruise.P_CHI=struct('default', 0.05, 'description', 'gain for path azimuth deviation', 'name', 'CR_K_PCHI', 'group','IFR_GNC');
+params.lonCruise.mainGain=struct('default', 100, 'description', 'Overall controller gain', 'name', 'CR_MAINGAIN', 'group','IFR_GNC');
+
+%% NAV parameters
+params.nav.xi_max    = struct('default', 11, 'type','single', 'description', 'xi_max', 'name', 'XI_MAX_GNC', 'group','IFR_GNC');
+params.nav.eta_max   = struct('default', 13, 'type','single', 'description', 'eta_max', 'name', 'ETA_MAX_GNC', 'group','IFR_GNC');
+params.nav.zeta_max  = struct('default', 21, 'type','single', 'description', 'zeta_max', 'name', 'ZETA_MAX_GNC', 'group','IFR_GNC');
+params.nav.pix_roll  = struct('default', pi, 'type','single', 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL_GNC', 'group','IFR_GNC');
+params.nav.pix_pitch = struct('default', deg2rad(0), 'type','single', 'description', 'Y axis orientation of pixhawk mount', 'name', 'PIX_PITCH_GNC', 'group','IFR_GNC');
+params.nav.pix_yaw   = struct('default', deg2rad(0), 'type','single', 'description', 'Z axis orientation of pixhawk mount', 'name', 'PIX_YAW_GNC', 'group','IFR_GNC');
+params.nav.use_acc   = struct('default', 1, 'type','single', 'description', 'Decide if IMU filter module should be used for accel. (1) or not (0)', 'name', 'IMUFACC_GNC', 'group','IFR_GNC');
 
 %% Signs
 params.controlsigns.ail = struct('default', 1, 'description', 'Sign of control command aileron', 'name', 'SIGN_AIL', 'group','IFR_GNC');
