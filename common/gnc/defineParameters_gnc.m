@@ -21,6 +21,8 @@ params.controller_selector = struct('default', 0, 'description', 'Select contoll
 params.imu_filt_ang_acc = struct('default', 1, 'description', 'Decide if IMU filter module should be used for angular accelerations (1) or not (0)', 'name', 'IMU_FIL_DRTE', 'group','IFR_GNC');
 params.trk_der_switch = struct('default', 1, 'description', 'Decide if track derivatives should be calculated from acceleration measurements (1) or from numerical differentiation (2-6)', 'name', 'G_TRK_DERIV', 'group','IFR_GNC');
 params.wp_tracking = struct('default', 0, 'description', 'WP tracking active', 'name', 'G_WP_TRKING', 'group','IFR_GNC');
+params.ifr_nav_active = struct('default', 0, 'description', 'NAV module active', 'name', 'IFR_NAV_ACTIVE', 'group','IFR_GNC');
+params.trim_ail_prio = struct('default', 1, 'description', 'Trim only aileron command (1) or elevator command (else)', 'name', 'TRIM_AIL_PRIO', 'group','IFR_GNC');
 
 %% ATOL parameters
 params.h_fake       = struct('default', 0, 'description', 'Perform fake landing at defined altitude', 'min', 0, 'name', 'A_FAK_ALT', 'group','IFR_GNC');
@@ -54,15 +56,15 @@ params.guidance.psi_cmd     = struct('default', 0, 'description', 'set-point psi
 
 %% Controller gains
 TSP = 3; %time separation principle
-k_p     = 12;
-k_q     = 12;
+k_p     = 8;
+k_q     = 8;
 k_r     = 8;
-k_a     = k_q/TSP;%alpha
-k_t     = k_q/TSP;%theta
-k_b     = k_r/TSP;%beta
-k_psi   = k_r/TSP;
-k_m     = k_p/TSP;%mu
-k_ga_p  = k_a/TSP;
+k_a     = 3;%alpha
+k_t     = 3;%theta
+k_b     = 3;%beta
+k_psi   = 3;
+k_m     = 3;%mu
+k_ga_p  = 1;
 k_chi_p = 1/3;%k_m/TSP;
 k_v     = 0.9;
 k_y     = k_chi_p/TSP;
@@ -151,7 +153,7 @@ params.lonCruise.mainGain=struct('default', 100, 'description', 'Overall control
 params.nav.xi_max    = struct('default', 11, 'type','single', 'description', 'xi_max', 'name', 'XI_MAX_GNC', 'group','IFR_GNC');
 params.nav.eta_max   = struct('default', 13, 'type','single', 'description', 'eta_max', 'name', 'ETA_MAX_GNC', 'group','IFR_GNC');
 params.nav.zeta_max  = struct('default', 21, 'type','single', 'description', 'zeta_max', 'name', 'ZETA_MAX_GNC', 'group','IFR_GNC');
-params.nav.pix_roll  = struct('default', pi, 'type','single', 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL_GNC', 'group','IFR_GNC');
+params.nav.pix_roll  = struct('default', deg2rad(0), 'type','single', 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL_GNC', 'group','IFR_GNC');
 params.nav.pix_pitch = struct('default', deg2rad(0), 'type','single', 'description', 'Y axis orientation of pixhawk mount', 'name', 'PIX_PITCH_GNC', 'group','IFR_GNC');
 params.nav.pix_yaw   = struct('default', deg2rad(0), 'type','single', 'description', 'Z axis orientation of pixhawk mount', 'name', 'PIX_YAW_GNC', 'group','IFR_GNC');
 params.nav.use_acc   = struct('default', 1, 'type','single', 'description', 'Decide if IMU filter module should be used for accel. (1) or not (0)', 'name', 'IMUFACC_GNC', 'group','IFR_GNC');
