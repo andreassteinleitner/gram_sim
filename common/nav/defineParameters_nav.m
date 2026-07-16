@@ -47,7 +47,7 @@ params.channelSwitch = struct('default', 0, 'description', 'ADC channels are swi
 
 params.lidar_offset = struct('default', 0, 'description', 'Offset on lidar measurement', 'name', 'LIDAR_OFF', 'group','IFR_NAV');
 
-params.pix_roll = struct('default', pi, 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL', 'group','IFR_NAV');
+params.pix_roll = struct('default', deg2rad(0), 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL', 'group','IFR_NAV');
 params.pix_pitch = struct('default', deg2rad(0), 'description', 'Y axis orientation of pixhawk mount', 'name', 'PIX_PITCH', 'group','IFR_NAV');
 params.pix_yaw = struct('default', deg2rad(0), 'description', 'Z axis orientation of pixhawk mount', 'name', 'PIX_YAW', 'group','IFR_NAV');
 

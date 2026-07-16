@@ -1,17 +1,15 @@
 %% Clean Start
-% close all;
-% bdclose all
-% clear all;
-% clc;
+close all;
+bdclose all
+clear all;
+clc;
 
 %% Use Simulink Project API to get the current project:
 projectRoot = slproject.getCurrentProject().RootFolder;
 
 %% Define airfield and aircraft
-LOCATION_FLAG_TO = 7;
-LOCATION_FLAG_LDG = 6;
 AIR_START_FLAG = 0; %off
-vehicleType = 1;
+vehicleType = 2; %(1) gram80, (2) gram40, (3) funcub
 
 %% Simulation Environment
 initLibrary();
@@ -27,11 +25,9 @@ defaultWP.flightplan = [4, 0, 0;-300, -200, -60;-300, -1200, -60;150, -600, -60;
 t_end = 250;
 
 if vehicle.landed == 1
-    disp(['Vehicle: ',vehicle.name,', Location: ',location_name,' Ground']);
-%elseif vehicle.airborne == 1
-%    disp(['Vehicle: ',vehicle.name,', Location: ',location_name,' Air']);
+    disp(['Vehicle: ',vehicle.name,' Ground']);
 else
-    disp(['Vehicle: ',vehicle.name,', Location: ',location_name,' Air']);
+    disp(['Vehicle: ',vehicle.name,' Air']);
 end
 
 %% Open model

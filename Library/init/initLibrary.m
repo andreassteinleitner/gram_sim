@@ -9,7 +9,8 @@ end
 if ~exist('vehicleType')
     vehicleType = -1;
 end
-[vehicle,location_name,to_rnwy,ldg_rnwy,rwyNoise,AIR_START_FLAG] = initVehicleLocation(LOCATION_FLAG_TO,LOCATION_FLAG_LDG,vehicleType,AIR_START_FLAG);
+% [vehicle,location_name,to_rnwy,ldg_rnwy,rwyNoise,AIR_START_FLAG] = initVehicleLocation(LOCATION_FLAG_TO,LOCATION_FLAG_LDG,vehicleType,AIR_START_FLAG);
+[vehicle,AIR_START_FLAG] = initVehicleLocation(vehicleType,AIR_START_FLAG);
 
 %% Gear
 %gear = initLandingGear();

@@ -20,7 +20,7 @@ params.trim_switch = struct('default', 0, 'description', 'Set autopilot into tri
 params.controller_selector = struct('default', 0, 'description', 'Select contoller type, (0) INDI, (1) MODAL', 'name', 'G_CONTROL_SEL', 'group','IFR_GNC');
 params.imu_filt_ang_acc = struct('default', 1, 'description', 'Decide if IMU filter module should be used for angular accelerations (1) or not (0)', 'name', 'IMU_FIL_DRTE', 'group','IFR_GNC');
 params.trk_der_switch = struct('default', 1, 'description', 'Decide if track derivatives should be calculated from acceleration measurements (1) or from numerical differentiation (2-6)', 'name', 'G_TRK_DERIV', 'group','IFR_GNC');
-params.wp_tracking = struct('default', 0, 'description', 'WP tracking active', 'name', 'G_WP_TRKING', 'group','IFR_GNC');
+params.wp_tracking = struct('default', 1, 'description', 'WP tracking active', 'name', 'G_WP_TRKING', 'group','IFR_GNC');
 params.ifr_nav_active = struct('default', 0, 'description', 'NAV module active', 'name', 'IFR_NAV_ACTIVE', 'group','IFR_GNC');
 params.trim_ail_prio = struct('default', 1, 'description', 'Trim only aileron command (1) or elevator command (else)', 'name', 'TRIM_AIL_PRIO', 'group','IFR_GNC');
 
@@ -50,7 +50,7 @@ params.guidance.K_H         = struct('default', 1, 'description', 'gain for hori
 params.guidance.K_V         = struct('default', 1, 'description', 'gain for vertical path tracking', 'name', 'GU_K_V', 'group','IFR_GNC');
 params.guidance.WP          = struct('default', -0.6, 'description', 'proportional gain for vertical waypoint tracking', 'name', 'GU_WP', 'group','IFR_GNC');
 params.guidance.v_cmd       = struct('default', 20, 'description', 'set-point velocity', 'unit', 'm/s', 'name', 'GU_V_CMD', 'min', 12, 'group','IFR_GNC');
-params.guidance.gamma_cmd   = struct('default', 0, 'description', 'set-point gamma', 'unit', 'deg', 'name', 'GU_GAMMA_CMD', 'group','IFR_GNC');
+params.guidance.gamma_cmd   = struct('default', 5, 'description', 'set-point gamma', 'unit', 'deg', 'name', 'GU_GAMMA_CMD', 'group','IFR_GNC');
 params.guidance.chi_cmd     = struct('default', 0, 'description', 'set-point chi', 'unit', 'deg', 'name', 'GU_CHI_CMD', 'group','IFR_GNC');
 params.guidance.psi_cmd     = struct('default', 0, 'description', 'set-point psi', 'unit', 'deg', 'name', 'GU_PSI_CMD', 'group','IFR_GNC');
 
@@ -150,13 +150,13 @@ params.latCruise.P_CHI=struct('default', 0.05, 'description', 'gain for path azi
 params.lonCruise.mainGain=struct('default', 100, 'description', 'Overall controller gain', 'name', 'CR_MAINGAIN', 'group','IFR_GNC');
 
 %% NAV parameters
-params.nav.xi_max    = struct('default', 11, 'type','single', 'description', 'xi_max', 'name', 'XI_MAX_GNC', 'group','IFR_GNC');
-params.nav.eta_max   = struct('default', 13, 'type','single', 'description', 'eta_max', 'name', 'ETA_MAX_GNC', 'group','IFR_GNC');
-params.nav.zeta_max  = struct('default', 21, 'type','single', 'description', 'zeta_max', 'name', 'ZETA_MAX_GNC', 'group','IFR_GNC');
-params.nav.pix_roll  = struct('default', deg2rad(0), 'type','single', 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL_GNC', 'group','IFR_GNC');
-params.nav.pix_pitch = struct('default', deg2rad(0), 'type','single', 'description', 'Y axis orientation of pixhawk mount', 'name', 'PIX_PITCH_GNC', 'group','IFR_GNC');
-params.nav.pix_yaw   = struct('default', deg2rad(0), 'type','single', 'description', 'Z axis orientation of pixhawk mount', 'name', 'PIX_YAW_GNC', 'group','IFR_GNC');
-params.nav.use_acc   = struct('default', 1, 'type','single', 'description', 'Decide if IMU filter module should be used for accel. (1) or not (0)', 'name', 'IMUFACC_GNC', 'group','IFR_GNC');
+params.nav.xi_max    = struct('default', 11, 'description', 'xi_max', 'name', 'XI_MAX_GNC', 'group','IFR_GNC');
+params.nav.eta_max   = struct('default', 13, 'description', 'eta_max', 'name', 'ETA_MAX_GNC', 'group','IFR_GNC');
+params.nav.zeta_max  = struct('default', 21, 'description', 'zeta_max', 'name', 'ZETA_MAX_GNC', 'group','IFR_GNC');
+params.nav.pix_roll  = struct('default', deg2rad(0), 'description', 'X axis orientation of pixhawk mount', 'name', 'PIX_ROLL_GNC', 'group','IFR_GNC');
+params.nav.pix_pitch = struct('default', deg2rad(0), 'description', 'Y axis orientation of pixhawk mount', 'name', 'PIX_PITCH_GNC', 'group','IFR_GNC');
+params.nav.pix_yaw   = struct('default', deg2rad(0), 'description', 'Z axis orientation of pixhawk mount', 'name', 'PIX_YAW_GNC', 'group','IFR_GNC');
+params.nav.use_acc   = struct('default', 1, 'description', 'Decide if IMU filter module should be used for accel. (1) or not (0)', 'name', 'IMUFACC_GNC', 'group','IFR_GNC');
 
 %% Signs
 params.controlsigns.ail = struct('default', 1, 'description', 'Sign of control command aileron', 'name', 'SIGN_AIL', 'group','IFR_GNC');

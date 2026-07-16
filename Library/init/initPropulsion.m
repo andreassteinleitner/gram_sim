@@ -1,7 +1,7 @@
 function propulsion = initPropulsion(vehicle)
 propulsion.r         = [0;0;0]; %engine position from CG
 propulsion.inci      = 0 * pi/180; %engine installation angle [rad]
-if vehicle.type == 2 %Funcub
+if vehicle.type > 1 %Funcub or Gram40
     propulsion.power_max = 620; %W
     propulsion.bias = 1; %W
 else

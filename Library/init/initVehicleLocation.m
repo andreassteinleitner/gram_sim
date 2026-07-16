@@ -1,4 +1,4 @@
-function [vehicle,location_name,to_rnwy,ldg_rnwy,rwyNoise,AIR_START_FLAG] = initVehicleLocation(LOCATION_FLAG_TO,LOCATION_FLAG_LDG,vehicleType,AIR_START_FLAG)
+function [vehicle,AIR_START_FLAG] = initVehicleLocation(vehicleType,AIR_START_FLAG)
 
 %% vehicle
 vehicleStruct = vehicleOptions();
@@ -12,43 +12,15 @@ end
 
 %% location selection
 locationStruct = locationOptions();
-if LOCATION_FLAG_TO == -1
-    string = 'Choose Start location:\n';
-    for k = 1:length(locationStruct)
-        string = [string num2str(k) ' - ' locationStruct{k}.name '\n'];
-    end
-    LOCATION_FLAG_TO = input(string);
-    string = 'Start from:\n0 - Ground\n1 - Air\n';
-    AIR_START_FLAG = input(string);
-end
-if LOCATION_FLAG_LDG == -1
-    string = 'Choose Landing location:\n';
-    for k = 1:length(locationStruct)
-        if isequal(locationStruct{k}.airport,locationStruct{LOCATION_FLAG_TO}.airport)
-            string = [string num2str(k) ' - ' locationStruct{k}.name '\n'];
-        end
-    end
-    LOCATION_FLAG_LDG = input(string);
-end
+LOCATION_FLAG_TO = 7;
+LOCATION_FLAG_LDG = 6;
+location_TO = locationStruct{LOCATION_FLAG_TO};
+location_LDG = locationStruct{LOCATION_FLAG_LDG};
 
 if AIR_START_FLAG == -1
     string = 'Start from:\n0 - Ground\n1 - Air\n';
     AIR_START_FLAG = input(string);
 end
-if ~isequal(locationStruct{LOCATION_FLAG_TO}.airport,locationStruct{LOCATION_FLAG_LDG}.airport)
-    string = 'Please choose a landing site corresponding to the take-off airport:\n';
-    for k = 1:length(locationStruct)
-        if isequal(locationStruct{k}.airport,locationStruct{LOCATION_FLAG_TO}.airport)
-            string = [string num2str(k) ' - ' locationStruct{k}.name '\n'];
-        end
-    end
-    LOCATION_FLAG_LDG = input(string);
-end
-
-%% init location
-location_TO = locationStruct{LOCATION_FLAG_TO};
-location_LDG = locationStruct{LOCATION_FLAG_LDG};
-location_name = location_TO.name;
 
 %% init vehicle
 vehicle = vehicleStruct{vehicleType};
@@ -72,74 +44,6 @@ else %Ground start
     vehicle.omega0 = [0;0;0];
 end
 vehicle.ground_height = location_TO.groundPos(3);
-
-%{
-    % Plot landing gear
-    for i=1:3
-        plotMat(1,i) = vehicle.gear.right_pos(i);
-        plotMat(2,i) = vehicle.gear.left_pos(i);
-        plotMat(3,i) = vehicle.gear.aux_pos(i);
-    end
-    figure
-    hold on
-    plot3(plotMat(:,1),plotMat(:,2),plotMat(:,3),'*r')
-    xlabel('x')
-    ylabel('y')
-    axis([-0.05,0.01,-0.01,0.01,0,0.2])
-    view(3)
-%}
-
-% runway and ATOL
-rwyTOLen = location_TO.rwyLenth;                            %1                  
-rwyTOHdg = mod((location_TO.groundHeading+180),360)-180;    %2
-rwyTOPos = location_TO.groundPos';                          %345
-rwyLDGLen = location_LDG.rwyLenth;                          %6
-rwyLDGHdg = mod((location_LDG.groundHeading+180),360)-180;  %7
-rwyLDGPos = location_LDG.groundPos';                        %8910
-patternCW = 0;                                              %11
-GPA = -13;                                                   %12
-baseLength = 400;                                           %13
-finalLength = 500;                                          %14
-hFlare = -15;                                                %15
-wpRadius = 60;                                              %16
-abortAngle = 4;                                             %17
-V_TO_slow = 7;                                             %18
-V_TO_fast = 15;                                             %19
-V_TO_excess = 23;                                           %20
-V_glide = 15;                                               %21
-fake_alt = 0;                                               %22
-abort_ldg = 0;                                              %23
-climboutAngle = 6;                                              %24
-rwyTOAltEnd = location_TO.altRwyEnd;
-rwyLDGAltEnd = location_LDG.altRwyEnd;
-
-% rnwy_coeffs = [rwyTOLen, rwyTOHdg, rwyTOPos(1)*10^7, rwyTOPos(2)*10^7, rwyTOPos(3)*10^3, rwyLDGLen, rwyLDGHdg, rwyLDGPos(1)*10^7, rwyLDGPos(2)*10^7, rwyLDGPos(3)*10^3, patternCW, GPA, baseLength, finalLength, hFlare, wpRadius, abortAngle, V_TO_slow, V_TO_fast, V_TO_excess, V_glide, fake_alt, abort_ldg, rwyTOAltEnd*10^3, rwyLDGAltEnd*10^3, climboutAngle];
-to_rnwy = single([rwyTOLen, rwyTOHdg, rwyTOPos(1)*10^7, rwyTOPos(2)*10^7, rwyTOPos(3)*10^3, rwyTOAltEnd*10^3]);
-ldg_rnwy = single([rwyLDGLen, rwyLDGHdg, rwyLDGPos(1)*10^7, rwyLDGPos(2)*10^7, rwyLDGPos(3)*10^3, rwyLDGAltEnd*10^3]);
-
-%% calculate ground noise
-a = (sind(rwyTOPos(1)/2-rwyLDGPos(1)/2))^2+cosd(rwyTOPos(1))*cosd(rwyLDGPos(1))*(sind(rwyTOPos(2)/2-rwyLDGPos(2)/2))^2;
-c = 2*atan2(sqrt(a),sqrt(1-a));
-d = 6371e3 * c; % distance between TO and LDG
-flying_region = ceil(d + rwyTOLen + rwyLDGLen + finalLength);
-
-x_dir = flying_region + 200;
-y_dir = flying_region + 200;
-amplitude = 1;
-
-im = zeros(x_dir, y_dir);
-[x_dir, y_dir] = size(im);
-i = 3;
-w = sqrt(x_dir*y_dir);
-while w > 3
-    i = i + 1;
-    d = interp2(randn(ceil((x_dir-1)/(2^(i-1))+1),ceil((y_dir-1)/(2^(i-1))+1)), i-1, 'spline');
-    im = im + i * d(1:x_dir, 1:y_dir);
-    w = w - ceil(w/2 - 1);
-end
-rwyNoise = amplitude*((im - min(im(:))) / (max(im(:)) - min(im(:)))*2-1);
-%figure; imagesc(im); colormap gray;
-%figure; surf(im); axis equal;
 
 end
 
@@ -230,33 +134,49 @@ vehicleStruct{1}.gear.aux_stiff = 0.2*vehicleStruct{1}.m*9.81/0.02;  %PartOfMass
 vehicleStruct{1}.gear.main_damp  = 5*vehicleStruct{1}.m;                 % N/(m/s)
 vehicleStruct{1}.gear.aux_damp  = 2*vehicleStruct{1}.m;                 % N/(m/s)
 
-% FunCub XL
+% Gram40
 vehicleStruct{2}.type = 2;
-vehicleStruct{2}.name = 'funcubXL';
-vehicleStruct{2}.m = 4;
-vehicleStruct{2}.J = [0.14145 0 0.01045; 0 0.11240 0;0.01045 0 0.23326];
-vehicleStruct{2}.cg = [0.079 ; 0; -0.083];
-vehicleStruct{2}.S = 0.4165; %assuming trapezoidal
-vehicleStruct{2}.b = 1.7;
-vehicleStruct{2}.chord = 0.26;
+vehicleStruct{2}.name = 'Gram40';
+vehicleStruct{2}.m = 3.6;
+vehicleStruct{2}.J = [0.04 0 0; 0 0.63 0;0 0 0.63];
+vehicleStruct{2}.cg = [1.545 ; 0; 0.094];
+vehicleStruct{2}.S = 0.25;
+vehicleStruct{2}.b = 0.9;
+vehicleStruct{2}.chord = 0.23;
 vehicleStruct{2}.fuselage = 10; %Lateral fuselage cross section
 
 refLengthScaled = 0.2;
 
-vehicleStruct{2}.gear.right_pos  = vehicleStruct{2}.cg + [0.17; 0.18; refLengthScaled];
-vehicleStruct{2}.gear.left_pos   = vehicleStruct{2}.cg + [0.17; -0.18; refLengthScaled];
-vehicleStruct{2}.gear.aux_pos   = vehicleStruct{2}.cg + [-0.5; 0; refLengthScaled];
+vehicleStruct{2}.gear.right_pos  = vehicleStruct{2}.cg + [0.05; 0.15; refLengthScaled];
+vehicleStruct{2}.gear.left_pos   = vehicleStruct{2}.cg + [0.05; -0.15; refLengthScaled];
+vehicleStruct{2}.gear.aux_pos   = vehicleStruct{2}.cg + [-0.5; 0; 0.5*refLengthScaled];
 
-vehicleStruct{2}.gear.main_stiff = 0.2*vehicleStruct{2}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
-vehicleStruct{2}.gear.aux_stiff = 0.4*vehicleStruct{2}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
-vehicleStruct{2}.gear.main_damp  = 2*vehicleStruct{2}.m;                 % N/(m/s)
-vehicleStruct{2}.gear.aux_damp  = 5*vehicleStruct{2}.m ;                 % N/(m/s)
+vehicleStruct{2}.gear.main_stiff = 0.4*vehicleStruct{2}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
+vehicleStruct{2}.gear.aux_stiff = 0.2*vehicleStruct{2}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
+vehicleStruct{2}.gear.main_damp  = 5*vehicleStruct{2}.m;                 % N/(m/s)
+vehicleStruct{2}.gear.aux_damp  = 2*vehicleStruct{2}.m;                 % N/(m/s)
+
+% FunCub XL
+vehicleStruct{3}.type = 3;
+vehicleStruct{3}.name = 'funcubXL';
+vehicleStruct{3}.m = 4;
+vehicleStruct{3}.J = [0.14145 0 0.01045; 0 0.11240 0;0.01045 0 0.23326];
+vehicleStruct{3}.cg = [0.079 ; 0; -0.083];
+vehicleStruct{3}.S = 0.4165; %assuming trapezoidal
+vehicleStruct{3}.b = 1.7;
+vehicleStruct{3}.chord = 0.26;
+vehicleStruct{3}.fuselage = 10; %Lateral fuselage cross section
+
+refLengthScaled = 0.2;
+
+vehicleStruct{3}.gear.right_pos  = vehicleStruct{3}.cg + [0.17; 0.18; refLengthScaled];
+vehicleStruct{3}.gear.left_pos   = vehicleStruct{3}.cg + [0.17; -0.18; refLengthScaled];
+vehicleStruct{3}.gear.aux_pos   = vehicleStruct{3}.cg + [-0.5; 0; refLengthScaled];
+
+vehicleStruct{3}.gear.main_stiff = 0.2*vehicleStruct{3}.m*9.81/0.02;  %PartOfMassToCarry * g * springDeflectionOnGround
+vehicleStruct{3}.gear.aux_stiff = 0.4*vehicleStruct{3}.m*9.81/0.04;  %PartOfMassToCarry * g * springDeflectionOnGround
+vehicleStruct{3}.gear.main_damp  = 2*vehicleStruct{3}.m;                 % N/(m/s)
+vehicleStruct{3}.gear.aux_damp  = 5*vehicleStruct{3}.m ;                 % N/(m/s)
 
 end
 
-function dcm = angle2rotation(phi,theta,psi)
-t1 = [1 0 0;0 cos(phi) -sin(phi);0 sin(phi) cos(phi)];
-t2 = [cos(theta) 0 sin(theta);0 1 0;-sin(theta) 0 cos(theta)];
-t3 = [cos(psi) -sin(psi) 0;sin(psi) cos(psi) 0;0 0 1];
-dcm = t1*t2*t3;
-end

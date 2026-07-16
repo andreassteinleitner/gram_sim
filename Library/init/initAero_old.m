@@ -1,7 +1,7 @@
 function aerodynamic = initAero_old(vehicle)
 toExcel = 0;
 
-if vehicle.type == 1
+if vehicle.type == 1 %gram80
     name = 'funcubXL_gram80'; %4kg
     gram_factor=5;
     CDmod = 0.3;
@@ -19,7 +19,22 @@ if vehicle.type == 1
     alphaMax = 10;
     CLdeg    = 0.5;
 
-elseif vehicle.type == 2 % FUNCUB XL
+elseif vehicle.type == 2 %gram40
+    name = 'funcubXL_gram80'; %4kg
+    gram_factor=1;
+    CDmod = 0.3;
+
+    aerodynamic.chord = 0.23;
+    aerodynamic.S = 0.25;
+    aerodynamic.b = 0.9;
+    
+    Cm0 = 0.025;
+    CnrDelta = 4;
+    C_rud_mod = 1;
+    alphaMax = 10;
+    CLdeg    = 0.5;
+
+elseif vehicle.type == 3 % FUNCUB XL
     name = 'funcubXL_old';
     gram_factor=1;
 
