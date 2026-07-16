@@ -20,7 +20,7 @@ params.trim_switch = struct('default', 0, 'description', 'Set autopilot into tri
 params.controller_selector = struct('default', 0, 'description', 'Select contoller type, (0) INDI, (1) MODAL', 'name', 'G_CONTROL_SEL', 'group','IFR_GNC');
 params.imu_filt_ang_acc = struct('default', 1, 'description', 'Decide if IMU filter module should be used for angular accelerations (1) or not (0)', 'name', 'IMU_FIL_DRTE', 'group','IFR_GNC');
 params.trk_der_switch = struct('default', 1, 'description', 'Decide if track derivatives should be calculated from acceleration measurements (1) or from numerical differentiation (2-6)', 'name', 'G_TRK_DERIV', 'group','IFR_GNC');
-params.wp_tracking = struct('default', 1, 'description', 'WP tracking active', 'name', 'G_WP_TRKING', 'group','IFR_GNC');
+params.wp_tracking = struct('default', 0, 'description', 'WP tracking active', 'name', 'G_WP_TRKING', 'group','IFR_GNC');
 params.ifr_nav_active = struct('default', 0, 'description', 'NAV module active', 'name', 'IFR_NAV_ACTIVE', 'group','IFR_GNC');
 params.trim_ail_prio = struct('default', 1, 'description', 'Trim only aileron command (1) or elevator command (else)', 'name', 'TRIM_AIL_PRIO', 'group','IFR_GNC');
 
@@ -50,7 +50,7 @@ params.guidance.K_H         = struct('default', 1, 'description', 'gain for hori
 params.guidance.K_V         = struct('default', 1, 'description', 'gain for vertical path tracking', 'name', 'GU_K_V', 'group','IFR_GNC');
 params.guidance.WP          = struct('default', -0.6, 'description', 'proportional gain for vertical waypoint tracking', 'name', 'GU_WP', 'group','IFR_GNC');
 params.guidance.v_cmd       = struct('default', 20, 'description', 'set-point velocity', 'unit', 'm/s', 'name', 'GU_V_CMD', 'min', 12, 'group','IFR_GNC');
-params.guidance.gamma_cmd   = struct('default', 5, 'description', 'set-point gamma', 'unit', 'deg', 'name', 'GU_GAMMA_CMD', 'group','IFR_GNC');
+params.guidance.gamma_cmd   = struct('default', 0, 'description', 'set-point gamma', 'unit', 'deg', 'name', 'GU_GAMMA_CMD', 'group','IFR_GNC');
 params.guidance.chi_cmd     = struct('default', 0, 'description', 'set-point chi', 'unit', 'deg', 'name', 'GU_CHI_CMD', 'group','IFR_GNC');
 params.guidance.psi_cmd     = struct('default', 0, 'description', 'set-point psi', 'unit', 'deg', 'name', 'GU_PSI_CMD', 'group','IFR_GNC');
 
@@ -102,8 +102,7 @@ params.indi.EFF_XI_N   = struct('default', 0.0051, 'description', 'Indi effectiv
 params.indi.EFF_ETA_M  = struct('default', -1.8705, 'description', 'Indi effectivity elevator to pitch', 'name', 'I_EFF_ETA_M', 'group','IFR_GNC');
 params.indi.EFF_ZETA_L = struct('default', 0.0078, 'description', 'Indi effectivity rudder to roll', 'name', 'I_EFF_ZETA_L', 'group','IFR_GNC');
 params.indi.EFF_ZETA_N = struct('default', -0.0938, 'description', 'Indi effectivity rudder to yaw', 'name', 'I_EFF_ZETA_N', 'group','IFR_GNC');
-params.indi.EFF_DELTA  = struct('default', 150, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
-% params.indi.EFF_DELTA  = struct('default', 14, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
+params.indi.EFF_DELTA  = struct('default', 14, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
 
 %% Inertia
 params.indi.inertia_xx = struct('default', 1.4707, 'description', 'Inertia xx', 'name', 'I_INERT_XX', 'group','IFR_GNC');

@@ -9,7 +9,7 @@ projectRoot = slproject.getCurrentProject().RootFolder;
 
 %% Define airfield and aircraft
 AIR_START_FLAG = 0; %off
-vehicleType = 2; %(1) gram80, (2) gram40, (3) funcub
+vehicleType = 1; %(1) gram80, (2) gram40, (3) funcub
 
 %% Simulation Environment
 initLibrary();
