@@ -31,8 +31,8 @@ params.h_loiter     = struct('default', 50, 'description', 'Loiter height above 
 %% Saturations
 params.limit.gammaMin          = struct('default', -12, 'description', 'Minimum gamma commanding', 'name', 'L_GAMMA_MIN', 'group','IFR_GNC');
 params.limit.gammaMax          = struct('default', 12, 'description', 'Maximum gamma commanding', 'name', 'L_GAMMA_MAX', 'group','IFR_GNC');
-params.limit.vel_max           = struct('default', 50, 'description', 'Maximum velocity', 'unit', 'm/s', 'name', 'L_V_MAX', 'group','IFR_GNC');
-params.limit.vel_min           = struct('default',15, 'description', 'Minimum velocity', 'name', 'L_VEL_MIN', 'group','IFR_GNC');
+params.limit.vel_max           = struct('default', 200, 'description', 'Maximum velocity', 'unit', 'm/s', 'name', 'L_V_MAX', 'group','IFR_GNC');
+params.limit.vel_min           = struct('default',25, 'description', 'Minimum velocity', 'name', 'L_VEL_MIN', 'group','IFR_GNC');
 params.limit.nzMax             = struct('default', 4, 'description', 'Maximum load factor', 'name', 'L_NZ_MAX', 'group','IFR_GNC');
 params.limit.gr_lim            = struct('default', 0.6, 'description', 'Limit for commanded ground turn rate', 'name', 'L_GR_MAX', 'group','IFR_GNC');
 params.limit.alpha_max         = struct('default', 15, 'description', 'Aerodynamic attitude', 'name', 'L_ALPHA_MAX_0', 'group','IFR_GNC');
@@ -49,7 +49,7 @@ params.limit.flap_max           = struct('default', 90, 'description', 'Maximum 
 params.guidance.K_H         = struct('default', 1, 'description', 'gain for horizontal path tracking', 'name', 'GU_K_H', 'group','IFR_GNC');
 params.guidance.K_V         = struct('default', 1, 'description', 'gain for vertical path tracking', 'name', 'GU_K_V', 'group','IFR_GNC');
 params.guidance.WP          = struct('default', -0.6, 'description', 'proportional gain for vertical waypoint tracking', 'name', 'GU_WP', 'group','IFR_GNC');
-params.guidance.v_cmd       = struct('default', 20, 'description', 'set-point velocity', 'unit', 'm/s', 'name', 'GU_V_CMD', 'min', 12, 'group','IFR_GNC');
+params.guidance.v_cmd       = struct('default', 40, 'description', 'set-point velocity', 'unit', 'm/s', 'name', 'GU_V_CMD', 'min', 12, 'group','IFR_GNC');
 params.guidance.gamma_cmd   = struct('default', 0, 'description', 'set-point gamma', 'unit', 'deg', 'name', 'GU_GAMMA_CMD', 'group','IFR_GNC');
 params.guidance.chi_cmd     = struct('default', 0, 'description', 'set-point chi', 'unit', 'deg', 'name', 'GU_CHI_CMD', 'group','IFR_GNC');
 params.guidance.psi_cmd     = struct('default', 0, 'description', 'set-point psi', 'unit', 'deg', 'name', 'GU_PSI_CMD', 'group','IFR_GNC');
@@ -97,12 +97,12 @@ params.indi.oswald      = struct('default', 0.7, 'description', 'Oswald factor B
 params.indi.cl0         = struct('default', 0.6, 'description', 'Zero lift coefficient', 'name', 'I_CL0', 'group','IFR_GNC');
 
 %% Effectiveness
-params.indi.EFF_XI_L   = struct('default', -0.1759, 'description', 'Indi effectivity aileron to roll', 'name', 'I_EFF_XI_L', 'group','IFR_GNC');
-params.indi.EFF_XI_N   = struct('default', 0.0051, 'description', 'Indi effectivity aileron to yaw', 'name', 'I_EFF_XI_N', 'group','IFR_GNC');
-params.indi.EFF_ETA_M  = struct('default', -1.8705, 'description', 'Indi effectivity elevator to pitch', 'name', 'I_EFF_ETA_M', 'group','IFR_GNC');
-params.indi.EFF_ZETA_L = struct('default', 0.0078, 'description', 'Indi effectivity rudder to roll', 'name', 'I_EFF_ZETA_L', 'group','IFR_GNC');
-params.indi.EFF_ZETA_N = struct('default', -0.0938, 'description', 'Indi effectivity rudder to yaw', 'name', 'I_EFF_ZETA_N', 'group','IFR_GNC');
-params.indi.EFF_DELTA  = struct('default', 14, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
+params.indi.EFF_XI_L   = struct('default', -0.1759*5, 'description', 'Indi effectivity aileron to roll', 'name', 'I_EFF_XI_L', 'group','IFR_GNC');
+params.indi.EFF_XI_N   = struct('default', -0.1759/sqrt(3)*5, 'description', 'Indi effectivity aileron to yaw', 'name', 'I_EFF_XI_N', 'group','IFR_GNC');
+params.indi.EFF_ETA_M  = struct('default', -1.8705*5, 'description', 'Indi effectivity elevator to pitch', 'name', 'I_EFF_ETA_M', 'group','IFR_GNC');
+params.indi.EFF_ZETA_L = struct('default', 0.019*5, 'description', 'Indi effectivity rudder to roll', 'name', 'I_EFF_ZETA_L', 'group','IFR_GNC');
+params.indi.EFF_ZETA_N = struct('default', -0.0938*5, 'description', 'Indi effectivity rudder to yaw', 'name', 'I_EFF_ZETA_N', 'group','IFR_GNC');
+params.indi.EFF_DELTA  = struct('default', 30, 'description', 'Indi effectivity thrust to accel', 'name', 'I_EFF_DELTA', 'group','IFR_GNC');
 
 %% Inertia
 params.indi.inertia_xx = struct('default', 1.4707, 'description', 'Inertia xx', 'name', 'I_INERT_XX', 'group','IFR_GNC');
